@@ -4,8 +4,12 @@ public class Player {
 
 	private int id;
 	private String name;
+    private char team;
+    private int score;
+    private boolean baseObjective; // Has player hit enemy base 3 times
+    private int equipmentID;
 	
-	public Player(int entryID, String entryName) 
+	public Player(int entryID, String entryName, char entryTeam) 
 	{
 		this.id = entryID;
 		this.name = entryName;
