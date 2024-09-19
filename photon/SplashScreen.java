@@ -3,6 +3,7 @@ package photon;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,7 +14,7 @@ public class SplashScreen {
 
     public SplashScreen() {
         window = new JWindow();
-        ImageIcon splashImage = new ImageIcon("images.png"); // Add your splash image path
+        ImageIcon splashImage = new ImageIcon("logo.jpg"); // Add your splash image path
         JLabel splashLabel = new JLabel(splashImage);
         window.getContentPane().add(splashLabel, BorderLayout.CENTER);
         window.setSize(splashImage.getIconWidth(), splashImage.getIconHeight());
