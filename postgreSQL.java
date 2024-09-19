@@ -100,13 +100,23 @@ public class postgreSQL {
             """
                 INSERT INTO players (id, codename)
                 VALUES (%s, %s)
-            """.formatted(id, "NEWCODENAME");
+            """.formatted(id, "PLACEHOLDER");
+            p = con.prepareStatement(query);
+            rs = p.executeQuery();
             return "ID added";
         }
     }
 
-    public void addCodename(String codename) {
-        
+    public void addCodename(String codename) throws SQLException {
+        //Add codename to field labeled placeholder
+        query =
+        """
+            UPDATE players
+            SET codename = %s
+            WHERE codename = 'PLACEHOLDER';
+        """.formatted(codename);
+        p = con.prepareStatement(query);
+        rs = p.executeQuery();
     }
 
     public static void main(String[] args) throws SQLException {
