@@ -9,16 +9,16 @@ public class UDP_Server {
     //Class variables
     byte data[] = new byte[1024];
     InetAddress ip;
+    private DatagramSocket serverSocket;
 
     //Constructor that inits local host ip
-    public UDP_Server() throws UnknownHostException {
+    public UDP_Server() throws UnknownHostException, IOException {
         ip = InetAddress.getLocalHost();
+        serverSocket = new DatagramSocket(7501); // Listening on port 7501
     }
 
     //Receive data method, (From client to server)
     public void UDP_ReceiveData() throws IOException {
-        //create server socket to listen for client messages
-        DatagramSocket serverSocket = new DatagramSocket(67);
         //create packet to receive the message
         DatagramPacket packetReceive = new DatagramPacket(data, data.length);
         //receive the message 
