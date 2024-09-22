@@ -1,17 +1,8 @@
 package photon;
+import java.awt.Color;
+import java.awt.Graphics;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.io.IOException;
-import java.io.File;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
-import java.awt.Color;
 
 public class View extends JPanel{
 
