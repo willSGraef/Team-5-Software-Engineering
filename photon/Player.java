@@ -20,6 +20,14 @@ public class Player {
 		this.equipmentID = entryID; // !!! THIS IS TEMPORARY AND INCORRECT FOR FINAL DESIGN
 	}
 
+	public Player()
+	{
+		this.id = 0;
+		this.name = " ";
+		this.team = ' ';
+		this.score = 0;
+	}
+
 	public void updateScore(int delta) {
 		this.score += delta;
 	}
