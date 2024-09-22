@@ -7,19 +7,19 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import java.util.ArrayList;
-//import java.util.Map;
+import javax.swing.BorderFactory;
 
 
 public class View extends JFrame{
 
 	private Model model;
-	//private Game game;
 	
-	private JTextField[] redTeamIDFields = new JTextField[15];
-	private JTextField[] redTeamCodenameFields = new JTextField[15];
-
-	private EntryField[] allFields = new EntryField[60];
+	private EntryField[] redTeamIDFields = new EntryField[15];
+	private EntryField[] redTeamCodenameFields = new EntryField[15];
+	private EntryField[] greenTeamIDFields = new EntryField[15];
+	private EntryField[] greenTeamCodenameFields = new EntryField[15];
 	
 
 
@@ -30,14 +30,14 @@ public class View extends JFrame{
 		this.setTitle("Photon");
         this.setSize(614, 638);
         this.setFocusable(true);
-        //this.getContentPane().add(view);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
+
 		
-
-
-
-		// red team id entry boxes
+		// this massive block iterates over h to represent columns, and i to represent rows. 
+		// the switch statement controls which column is being generated. 
+		// the JTextFields used to input players are stored in the EntryField objects, which know their own columns and rows.
+		// each EntryField is passed to the setActionListener method, and finally added to the JFrame of this view.
 		for (int h = 0; h < 4; h++){
 			for (int i = 0; i < 15; i++){
 				switch (h) {
@@ -46,18 +46,19 @@ public class View extends JFrame{
 						tempEntryIDRed.setBounds(100, 20*i+50, 50, 20); 
 
 						EntryField tempEntryFieldIDRed = new EntryField(tempEntryIDRed, i, h);
-						allFields[i] = tempEntryFieldIDRed;
+						redTeamIDFields[i] = tempEntryFieldIDRed;
 						
-
+						setActionListener(tempEntryFieldIDRed);
 						this.add(tempEntryIDRed);
 						break;
-					case 1: // creates red team name fields
+					case 1: // creates red-team name fields
 						JTextField tempEntryNameRed = new JTextField();  
 						tempEntryNameRed.setBounds(150, 20*i+50, 100, 20); 
 
 						EntryField tempEntryFieldNameRed = new EntryField(tempEntryNameRed, i, h);
-						allFields[i+15] = tempEntryFieldNameRed;
+						redTeamCodenameFields[i] = tempEntryFieldNameRed;
 
+						setActionListener(tempEntryFieldNameRed);
 						this.add(tempEntryNameRed);
 						break;
 					case 2: // creates green team id fields
@@ -65,97 +66,50 @@ public class View extends JFrame{
 						tempEntryIDGreen.setBounds(300, 20*i+50, 50, 20); 
 
 						EntryField tempEntryFieldIDGreen = new EntryField(tempEntryIDGreen, i, h);
-						allFields[i+30] = tempEntryFieldIDGreen;
+						greenTeamIDFields[i] = tempEntryFieldIDGreen;
 
+						setActionListener(tempEntryFieldIDGreen);
 						this.add(tempEntryIDGreen);
 						break;
-					case 3: // creates green team name fields
+					case 3: // creates green-team name fields
 						JTextField tempEntryNameGreen = new JTextField();  
 						tempEntryNameGreen.setBounds(350, 20*i+50, 100, 20);
 
 						EntryField tempEntryFieldNameGreen = new EntryField(tempEntryNameGreen, i, h);
-						allFields[i+45] = tempEntryFieldNameGreen;
+						greenTeamCodenameFields[i] = tempEntryFieldNameGreen;
 
+						setActionListener(tempEntryFieldNameGreen);
 						this.add(tempEntryNameGreen);
 						break;
 					default:
 						break;
 				}
-				setActionListener(allFields[i]);
 			}
 		}
-
-
-		// for (int i = 0; i < 15; i++)
-		// {
-		// 	JTextField tempEntryID = new JTextField();  
-		// 	tempEntryID.setBounds(100, 20*i+50, 150, 20); 
-		// 	redTeamIDFields[i] = tempEntryID;
-			
-		// 	// this block of code creates and defines a personal action listener for each textField, which listens for the Enter key. 
-		// 	// for the id-boxes, it does not accept a non-integer, and SHOULD prompt the user to enter a valid number instead.
-		// 	// finally, it adds a player to the model, which should also add it to the database.
-		// 	tempEntryID.addActionListener(new ActionListener(){
-		// 			@Override
-		// 			public void actionPerformed(ActionEvent event) {
-		// 				try {
-							
-		// 					Integer.parseInt(event.getSource().getText());
-		// 				} catch (Exception e) {
-		// 					System.out.println("non-number entered");
-		// 					return;
-		// 				}
-		// 				// code isn't working here for new entries by id; the indexOf function is returning -1. solution should involve changing the arraylists to arrays.
-		// 				model.addPlayer(Integer.parseInt(tempEntryID.getText()), 'r', i);
-		// 				//model.addPlayer(redTeamIDFields.getInt(i), 0, i);
-		// 			}
-		// 	});
-
-	    // 	this.add(tempEntryID);
-			
-		// }
-
-		// // red team codeName entry boxes
-		// for (int j = 0; j < 15; j++)
-		// {
-		// 	JTextField tempEntry = new JTextField();  
-		// 	tempEntry.setBounds(300, 20*j+50, 150, 20); 
-		// 	redTeamCodenameFields[j] = tempEntry;
-			
-		// 	tempEntry.addActionListener(new ActionListener(){
-		// 			@Override
-		// 			public void actionPerformed(ActionEvent event) {
-		// 				//int tempIndex = redTeamCodenameFields.indexOf(tempEntry);
-						
-		// 				model.addPlayer(Integer.parseInt(redTeamIDFields[j].getText()), tempEntry.getText() ,'r', j);
-		// 			}
-		// 	});
-
-	    // 	this.add(tempEntry);
-			
-		// }
 		
-    	//g.setSize(300,300);  
     	this.setLayout(null);  
-    	//team1Entries.setVisible(true);
+    	
 	}
 
+	// this sets a different action listener depending on whether we are pressing the "enter" key on an ID column or a codeName column.
 	private void setActionListener(EntryField entryToListen){
         int column = entryToListen.getColumn();
-		JTextField tempEntry = entryToListen.getEntryField();
-		
+		int row = entryToListen.getRow();
+		JTextField tempEntry = entryToListen.getTextField();
+
+		// for the ID columns, it checks for if the input ID is a valid number, and then adds a player to the model.
+		// here we hava a choice: we could check the database for a name here, or check in the model.
         if(column == 0 || column == 2){
             tempEntry.addActionListener(new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent event) {
 					try {
-						
 						Integer.parseInt(tempEntry.getText());
-					} catch (Exception e) {
-						System.out.println("non-number entered");
+					} 
+					catch (Exception e) {
+						System.out.println("please enter a valid ID");
 						return;
 					}
-					// code isn't working here for new entries by id; the indexOf function is returning -1. solution should involve changing the arraylists to arrays.
 					if (column == 0)
 						model.addPlayer(Integer.parseInt(tempEntry.getText()), 'r', entryToListen.getRow());
 					else
@@ -163,16 +117,25 @@ public class View extends JFrame{
 
 				}
 			});
-        }
+        } // 
         else if(column == 1 || column == 3){
 			tempEntry.addActionListener(new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent event) {
-					System.out.println("whoa! something happened!S");
+					try {
+						if(column == 1)
+							Integer.parseInt(redTeamIDFields[row].getTextField().getText());
+						else
+							Integer.parseInt(greenTeamIDFields[row].getTextField().getText());
+					} 
+					catch (Exception e) {
+						System.out.println("please enter a valid ID");
+						return;
+					}
 					if (column == 1)
-						model.addPlayer(Integer.parseInt(tempEntry.getText()), 'r', entryToListen.getRow());
+						model.addPlayer(Integer.parseInt(redTeamIDFields[row].getTextField().getText()), tempEntry.getText(), 'r', entryToListen.getRow());
 					else
-						model.addPlayer(Integer.parseInt(tempEntry.getText()), tempEntry.getText(), 'g', entryToListen.getRow());
+						model.addPlayer(Integer.parseInt(greenTeamIDFields[row].getTextField().getText()), tempEntry.getText(), 'g', entryToListen.getRow());
 
 				}
 			});
@@ -184,7 +147,6 @@ public class View extends JFrame{
 	public void paintComponent(Graphics g)
 	{
 		g.setColor(new Color(35, 5, 48));
-		//g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
 	}
 }

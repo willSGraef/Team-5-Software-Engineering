@@ -4,8 +4,6 @@ import java.util.ArrayList;
 public class Model {
 	private ArrayList<Player> database;
 	
-	//private ArrayList<Player> redTeam;
-	//private ArrayList<Player> greenTeam;
 	private Player[] redTeam = new Player[15];
 	private Player[] greenTeam = new Player[15];
 
@@ -28,6 +26,7 @@ public class Model {
 				redTeam[index] = tempPlayer;
 
 		System.out.println("Success!" + tempPlayer.getName());
+		this.printState();
 		this.printState();
 	}
 
@@ -58,7 +57,7 @@ public class Model {
 			redTeam[entryNumber] = null;
 	}
 
-	public void printState(){ //testing code
+	public void printState(){ //testing code - remove 
 		for (int i = 0; i<15; i++){
 			System.out.println(redTeam[i].getID() + " " + redTeam[i].getName() + "\n");
 		}
