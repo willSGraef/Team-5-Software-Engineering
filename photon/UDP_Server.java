@@ -23,6 +23,9 @@ public class UDP_Server {
         DatagramPacket packetReceive = new DatagramPacket(data, data.length);
         //receive the message 
         serverSocket.receive(packetReceive);
+        // Convert the received byte data to a string
+        String message = new String(packetReceive.getData(), 0, packetReceive.getLength());
+        System.out.println("Received equipment code: " + message);
         //close the socket
         serverSocket.close();
     }
