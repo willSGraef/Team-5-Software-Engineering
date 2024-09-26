@@ -43,7 +43,14 @@ public class Controller implements ActionListener, MouseListener, MouseMotionLis
 	
 	public void keyPressed(KeyEvent e) 
 	{
+		switch (e.getKeyCode()) {
+			case KeyEvent.VK_INSERT:
+				model.printState();
+				break;
 		
+			default:
+				break;
+		}
 	}
 	public void keyReleased(KeyEvent e){	}
 	
