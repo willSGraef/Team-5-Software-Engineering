@@ -1,4 +1,5 @@
 package photon;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Model {
@@ -6,6 +7,8 @@ public class Model {
 	
 	private Player[] redTeam = new Player[15];
 	private Player[] greenTeam = new Player[15];
+
+	private postgreSQL SQL = new postgreSQL();
 
 	public Model(){
 		database = new ArrayList<Player>();
@@ -31,16 +34,19 @@ public class Model {
 	}
 
 	// checks for a player in the database by id, then adds them to the selected team
-	public void addPlayer(int id, char team, int index){
-		// Necessary functionality: this needs to check for a player by id in the database, and return the player's codename if it exists
-		if (false){ // will check if in the database, and add as appropriate
-
+	public void addPlayer(int id, char team, String codeName, int index) throws SQLException{
+		/*Connects to the database, will only work on the vm, if you try to run on your 
+		local machine, it will not connect */
+		SQL.connect();
+		//Run addID method, returns ID added if codename is needed, otherwise source codename from existing id in db
+		String potentialCodeName = SQL.addID(id);
+		if (potentialCodeName != "ID added") {
+			codeName = potentialCodeName;
 		}
-		else{ //if the player does not exist in the database yet
-
-		}
-		
-		Player tempPlayer = new Player(id, "TEMPORARY", team);
+		SQL.addCodename(codeName);
+		//SQL Disconnect
+		SQL.disconnect();
+		Player tempPlayer = new Player(id, codeName, team);
 		if(team =='g')
 				greenTeam[index] = tempPlayer;
 			else if(team == 'r')

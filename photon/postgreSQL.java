@@ -1,3 +1,4 @@
+package photon;
 //Java postgreSQL Connection File
 
 import java.sql.Connection;
@@ -14,11 +15,11 @@ public class postgreSQL {
     String password = "student";
     /*Init basic sql components, be sure to properly look at the documentation 
     for these under java.sql to know their functionaility*/
-    Connection con = null;
-    PreparedStatement p = null;
-    ResultSet rs = null;
+    Connection con;
+    PreparedStatement p;
+    ResultSet rs;
     //String for different queries we use in this class
-    String query = null;
+    String query;
     
     //Connect method
     public void connect() throws SQLException {

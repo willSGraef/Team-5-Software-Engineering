@@ -111,9 +111,9 @@ public class View extends JFrame{
 						return;
 					}
 					if (column == 0)
-						model.addPlayer(Integer.parseInt(tempEntry.getText()), 'r', entryToListen.getRow());
+						model.addPlayer(Integer.parseInt(tempEntry.getText()), "TEMP", 'r', entryToListen.getRow());
 					else
-						model.addPlayer(Integer.parseInt(tempEntry.getText()), 'g', entryToListen.getRow());
+						model.addPlayer(Integer.parseInt(tempEntry.getText()), "TEMP", 'g', entryToListen.getRow());
 
 				}
 			});
