@@ -15,4 +15,9 @@ run:
 	@echo "---> to clean use: make clean"
 
 clean: 
-	rm photon/*.class
+	ifeq ($(OS),Windows_NT)
+#		have not verified this works
+		del photon/*.class
+	else
+		rm photon/*.class
+	endif
