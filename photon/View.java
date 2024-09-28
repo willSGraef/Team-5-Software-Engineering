@@ -18,8 +18,11 @@ public class View extends JFrame{
 	
 	private EntryField[] redTeamIDFields = new EntryField[15];
 	private EntryField[] redTeamCodenameFields = new EntryField[15];
+	private EntryField[] redTeamEquipmentIDFields = new EntryField[15];
+
 	private EntryField[] greenTeamIDFields = new EntryField[15];
 	private EntryField[] greenTeamCodenameFields = new EntryField[15];
+	private EntryField[] greenTeamEquipmentIDFields = new EntryField[15];
 	
 
 
@@ -38,7 +41,7 @@ public class View extends JFrame{
 		// the switch statement controls which column is being generated. 
 		// the JTextFields used to input players are stored in the EntryField objects, which know their own columns and rows.
 		// each EntryField is passed to the setActionListener method, and finally added to the JFrame of this view.
-		for (int h = 0; h < 4; h++){
+		for (int h = 0; h < 6; h++){
 			for (int i = 0; i < 15; i++){
 				switch (h) {
 					case 0: // creates red team id fields
@@ -61,9 +64,19 @@ public class View extends JFrame{
 						setActionListener(tempEntryFieldNameRed);
 						this.add(tempEntryNameRed);
 						break;
-					case 2: // creates green team id fields
+					case 2: // creates red-team equipment ID fields
+						JTextField tempEntryEquipmentIDRed = new JTextField();  
+						tempEntryEquipmentIDRed.setBounds(250, 20*i+50, 50, 20); 
+
+						EntryField tempEntryFieldEquipmentIDRed = new EntryField(tempEntryEquipmentIDRed, i, h);
+						redTeamEquipmentIDFields[i] = tempEntryFieldEquipmentIDRed;
+
+						setActionListener(tempEntryFieldEquipmentIDRed);
+						this.add(tempEntryEquipmentIDRed);
+						break;
+					case 3: // creates green team id fields
 						JTextField tempEntryIDGreen = new JTextField();  
-						tempEntryIDGreen.setBounds(300, 20*i+50, 50, 20); 
+						tempEntryIDGreen.setBounds(350, 20*i+50, 50, 20); 
 
 						EntryField tempEntryFieldIDGreen = new EntryField(tempEntryIDGreen, i, h);
 						greenTeamIDFields[i] = tempEntryFieldIDGreen;
@@ -71,9 +84,9 @@ public class View extends JFrame{
 						setActionListener(tempEntryFieldIDGreen);
 						this.add(tempEntryIDGreen);
 						break;
-					case 3: // creates green-team name fields
+					case 4: // creates green-team name fields
 						JTextField tempEntryNameGreen = new JTextField();  
-						tempEntryNameGreen.setBounds(350, 20*i+50, 100, 20);
+						tempEntryNameGreen.setBounds(400, 20*i+50, 100, 20);
 
 						EntryField tempEntryFieldNameGreen = new EntryField(tempEntryNameGreen, i, h);
 						greenTeamCodenameFields[i] = tempEntryFieldNameGreen;
@@ -81,6 +94,15 @@ public class View extends JFrame{
 						setActionListener(tempEntryFieldNameGreen);
 						this.add(tempEntryNameGreen);
 						break;
+					case 5: // creates Green-team equipment ID fields
+						JTextField tempEntryEquipmentIDGreen = new JTextField();  
+						tempEntryEquipmentIDGreen.setBounds(500, 20*i+50, 50, 20); 
+
+						EntryField tempEntryFieldEquipmentIDGreen = new EntryField(tempEntryEquipmentIDGreen, i, h);
+						greenTeamEquipmentIDFields[i] = tempEntryFieldEquipmentIDGreen;
+
+						setActionListener(tempEntryFieldEquipmentIDGreen);
+						this.add(tempEntryEquipmentIDGreen);
 					default:
 						break;
 				}
@@ -111,9 +133,11 @@ public class View extends JFrame{
 						return;
 					}
 					if (column == 0)
-						model.addPlayer(Integer.parseInt(tempEntry.getText()), 'r', entryToListen.getRow());
+
+						model.addPlayer(Integer.parseInt(tempEntry.getText()), "TEMP", 'r', entryToListen.getRow());
 					else
-						model.addPlayer(Integer.parseInt(tempEntry.getText()), 'g', entryToListen.getRow());
+						model.addPlayer(Integer.parseInt(tempEntry.getText()), "TEMP", 'g', entryToListen.getRow());
+
 
 				}
 			});
@@ -133,9 +157,9 @@ public class View extends JFrame{
 						return;
 					}
 					if (column == 1)
-						model.addPlayer(Integer.parseInt(redTeamIDFields[row].getTextField().getText()), tempEntry.getText(), 'r', entryToListen.getRow());
+						model.addPlayer(Integer.parseInt(redTeamIDFields[row].getTextField().getText()), tempEntry.getText(), 'r', entryToListen.getRow(), entryToListen.getRow());
 					else
-						model.addPlayer(Integer.parseInt(greenTeamIDFields[row].getTextField().getText()), tempEntry.getText(), 'g', entryToListen.getRow());
+						model.addPlayer(Integer.parseInt(greenTeamIDFields[row].getTextField().getText()), tempEntry.getText(), 'g', entryToListen.getRow(), entryToListen.getRow());
 
 				}
 			});
