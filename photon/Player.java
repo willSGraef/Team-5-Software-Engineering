@@ -9,6 +9,7 @@ public class Player {
 	private boolean baseObjective; // Has player hit enemy base 3 times
 	private int equipmentID;
 
+
 	public Player(int entryPlayerID, String entryName, char entryTeam, int entryEquipmentID) 
 	{
 		this.playerID = entryPlayerID;
@@ -37,6 +38,7 @@ public class Player {
 		this.name = " ";
 		this.team = ' ';
 		this.score = 0;
+		this.equipmentID = 0;
 	}
 
 	public void updateScore(int delta) {
