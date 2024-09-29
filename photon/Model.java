@@ -158,9 +158,6 @@ public class Model {
 		}
 	}
 
-	// move activeField. could just increase the number and set i, i+15, and i+30
-	// what if we changed to make entryfields 0, 1, and 2 where all for entryfield 1?
-	// currently, 0 1 and 2 are all red id fields.
 	public void shiftActiveFieldForward()
 	{
 		if (activeField < 29)
