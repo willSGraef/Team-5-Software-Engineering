@@ -24,7 +24,7 @@ public class UDP_Client {
         DatagramPacket packetSend = new DatagramPacket (data, data.length, ip, 7501);
 
         clientSocket.send(packetSend);
-        System.out.println("Sent equipment code: " + message);
+        System.out.println("Sent code: " + message);
     }
 
     public void close() {

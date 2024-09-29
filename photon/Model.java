@@ -1,5 +1,6 @@
 package photon;
 import java.awt.Color;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -103,7 +104,18 @@ public class Model {
 			redTeam[currentRowHead/2] = tempPlayer;
 		}
 
+		// Send equipment ID via UDP
+		String message = team + " " + equipmentID;
+		try {
+			UDP_Client udpClient = new UDP_Client();
+			udpClient.UDP_SendData(message);
+			udpClient.close();
+		} catch (IOException e) {
+			System.out.println("Error sending data via UDP: " + e.getMessage());
+		}
+
 		System.out.println("Success!" + tempPlayer.getID());
+		System.out.println("Equipment ID sent: " + message);
 	}
 
 	// deletes a player from the in-game teams, but not the database.

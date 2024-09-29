@@ -25,7 +25,7 @@ public class UDP_Server {
         serverSocket.receive(packetReceive);
         // Convert the received byte data to a string
         String message = new String(packetReceive.getData(), 0, packetReceive.getLength());
-        System.out.println("Received equipment code: " + message);
+        System.out.println("Received code: " + message);
         //close the socket
         serverSocket.close();
     }
