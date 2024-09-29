@@ -1,44 +1,82 @@
 package photon;
+import java.awt.Color;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import javax.swing.JTextField;
 
 
 
 public class Model {
-	private ArrayList<Player> database;
-	
-	//private ArrayList<Player> redTeam;
-	//private ArrayList<Player> greenTeam;
+
+	private JTextField[] redFields = new JTextField[45];
+	private JTextField[] greenFields = new JTextField[45];
+
 	private Player[] redTeam = new Player[15];
 	private Player[] greenTeam = new Player[15];
 
+	private int activeField = 0; // 0-29, 
+
+	
 	private postgreSQL SQL = new postgreSQL();
 
 	public Model(){
-		database = new ArrayList<Player>();
+		
 		for (int i = 0; i < 15; i++){
 			redTeam[i] = new Player();
+			greenTeam[i] = new Player();
 		}
 	}
 
-	// called when a new id-codeName pairing is added, adding to both the database and team
-	public void addPlayer(int id, String codeName, char team, int index, int equipmentID){
-
-		// first, add to the database (functionality missing)
-
-		Player tempPlayer = new Player(id, codeName, team, equipmentID);
-			if(team =='g')
-				greenTeam[index] = tempPlayer;
-			else if(team == 'r')
-				redTeam[index] = tempPlayer;
-
-		System.out.println("Success!" + tempPlayer.getName());
-		this.printState();
-	}
 
 	// checks for a player in the database by id, then adds them to the selected team
+	// if a player is entered with no codename attached, and they do not exist in the database, the functionality is unclear
+	public void addPlayer() throws SQLException{
+		
+		int currentRowHead;
+		int id;
+		String codeName;
+		char team;
+		int equipmentID;
 
-	public void addPlayer(int id, char team, String codeName, int index) throws SQLException{
+		if(activeField%2 == 0) // red case
+		{
+			team = 'r';
+			currentRowHead = (int)(activeField * 1.5);
+			try {
+				id = Integer.parseInt(redFields[currentRowHead].getText());
+			} catch (Exception e) {
+				System.out.println("insert a valid Player ID");
+				id = 0;
+			}
+			codeName = redFields[currentRowHead+1].getText();
+			try {
+				equipmentID = Integer.parseInt(redFields[currentRowHead+2].getText());
+			} catch (Exception e) {
+				System.out.println("insert a valid Equipment ID");
+				equipmentID = 0;
+			}
+		}
+		else //green case
+		{
+			team = 'g';
+			currentRowHead = (int)((activeField-1) * 1.5);
+			try {
+				id = Integer.parseInt(greenFields[currentRowHead].getText());
+			} catch (Exception e) {
+				System.out.println("insert a valid ID");
+				id = 0;
+			}
+			codeName = greenFields[currentRowHead+1].getText();
+			try {
+				equipmentID = Integer.parseInt(greenFields[currentRowHead+2].getText());
+			} catch (Exception e) {
+				System.out.println("insert a valid Equipment ID");
+				equipmentID = 0;
+			}
+		}
+
+		
 		/*Connects to the database, will only work on the vm, if you try to run on your 
 		local machine, it will not connect */
 		SQL.connect();
@@ -46,15 +84,24 @@ public class Model {
 		String potentialCodeName = SQL.addID(id);
 		if (potentialCodeName != "ID added") {
 			codeName = potentialCodeName;
+			if(team =='g'){
+				greenFields[currentRowHead+1].setText(codeName);
+			}
+			else if(team == 'r'){
+				redFields[currentRowHead+1].setText(codeName);
+			}
 		}
 		SQL.addCodename(codeName);
 		//SQL Disconnect
 		SQL.disconnect();
-		Player tempPlayer = new Player(id, codeName, team);
-		if(team =='g')
-				greenTeam[index] = tempPlayer;
-			else if(team == 'r')
-				redTeam[index] = tempPlayer;
+		
+		Player tempPlayer = new Player(id, codeName, team, equipmentID);
+		if(team =='g'){
+			greenTeam[currentRowHead/2] = tempPlayer;
+		}
+		else if(team == 'r'){
+			redTeam[currentRowHead/2] = tempPlayer;
+		}
 
 		System.out.println("Success!" + tempPlayer.getID());
 	}
@@ -67,11 +114,68 @@ public class Model {
 			redTeam[entryNumber] = null;
 	}
 
-	public void printState(){ //testing code
-		for (int i = 0; i<15; i++){
-			System.out.println(redTeam[i].getID() + " " + redTeam[i].getName() + "\n");
+	// add EntryField Method
+	public void addTextFieldRed(JTextField field, int row, int column)
+	{
+		redFields[(row*3)+column] = field;
+	}
+
+	public void addTextFieldGreen(JTextField field, int row, int column)
+	{
+		greenFields[(row*3)+column] = field;
+	}
+
+	// update active box visually by updating the background color to be more intense
+	public void updateActiveField()
+	{
+		Color activeRedColor = new Color(235, 69, 69);
+		Color activeGreenColor = new Color(69, 237, 69);
+		Color normalRedColor = new Color(235, 110, 110);
+		Color normalGreenColor = new Color(127, 235, 110);
+
+		for (int i = 0; i < 45; i++){
+			redFields[i].setBackground(normalRedColor);
+			greenFields[i].setBackground(normalGreenColor);
+		}
+
+		
+		if(activeField%2 == 0) // redfields case
+		{
+			int currentRowHead = (int)(activeField * 1.5);
+			redFields[currentRowHead].setBackground(activeRedColor);
+			redFields[currentRowHead+1].setBackground(activeRedColor);
+			redFields[currentRowHead+2].setBackground(activeRedColor);
+
+
+		}
+		else //green case
+		{
+			int currentRowHead = (int)((activeField-1) * 1.5);
+			greenFields[currentRowHead].setBackground(activeGreenColor);
+			greenFields[currentRowHead+1].setBackground(activeGreenColor);
+			greenFields[currentRowHead+2].setBackground(activeGreenColor);
+
 		}
 	}
+
+	// move activeField. could just increase the number and set i, i+15, and i+30
+	// what if we changed to make entryfields 0, 1, and 2 where all for entryfield 1?
+	// currently, 0 1 and 2 are all red id fields.
+	public void shiftActiveFieldForward()
+	{
+		if (activeField < 29)
+		{
+			activeField++;
+		}
+	}
+	public void shiftActiveFieldBackward()
+	{
+		if (activeField > 0)
+		{
+			activeField--;
+		}
+	}
+
 
 
 }

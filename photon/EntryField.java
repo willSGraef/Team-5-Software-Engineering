@@ -6,7 +6,7 @@ public class EntryField {
 
     private JTextField textField = new JTextField(); 
     private int row; // 0 - 14
-    private int column; // 0 - 3
+    private int column; // 0 - 6
 
 
     public EntryField(JTextField inputField, int row, int column){

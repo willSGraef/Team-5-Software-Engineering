@@ -9,9 +9,7 @@ public class Game{
     private View view = new View(controller, model);
     
     public Game() {
-        view.addMouseMotionListener(controller);
-        view.addMouseListener(controller);
-        view.addKeyListener(controller);
+        
     }
 
     public static void main(String[] args) {
@@ -38,7 +36,7 @@ public class Game{
         while (true) {
             view.repaint(); // This will indirectly call View.paintComponent
             Toolkit.getDefaultToolkit().sync(); // Updates screen
-
+            model.updateActiveField();
             // Go to sleep for 40 milliseconds (controls game speed)
             try {
                 Thread.sleep(40);
