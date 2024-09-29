@@ -4,10 +4,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
-public class Controller implements ActionListener, MouseListener, MouseMotionListener, KeyListener{
+
+public class Controller implements ActionListener, KeyListener{
 
 	private View view;
 	private Model model;
@@ -36,31 +35,31 @@ public class Controller implements ActionListener, MouseListener, MouseMotionLis
         splash.closeSplash();
     }
 	
-	public void mousePressed(MouseEvent e) {	}
-	public void mouseDragged(MouseEvent e) {	}
-	public void mouseReleased(MouseEvent e) {	}
-	
-	
+
 	public void keyPressed(KeyEvent e) 
 	{
+		System.out.println(e.getKeyCode());
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_INSERT:
-				model.printState();
+				try {
+					model.addPlayer();
+				} catch (Exception e1) {
+					System.out.println("SQL ERROR");
+				}
 				break;
-		
+			case KeyEvent.VK_RIGHT:
+				model.shiftActiveFieldForward();
+				break;
+			case KeyEvent.VK_LEFT:
+				model.shiftActiveFieldBackward();
+				break;
 			default:
 				break;
 		}
 	}
-	public void keyReleased(KeyEvent e){	}
-	
-	
-	public void mouseMoved(MouseEvent e) {	  }
-	public void mouseEntered(MouseEvent e) {    }
-	public void mouseExited(MouseEvent e) {    }
-	public void mouseClicked(MouseEvent e) {    }
-	public void keyTyped(KeyEvent e) {	  }
-	public void actionPerformed(ActionEvent e) {    }
 
+	public void keyTyped(KeyEvent e){	}
+	public void keyReleased(KeyEvent e){	}
+	public void actionPerformed(ActionEvent e) {    }
     
 }
