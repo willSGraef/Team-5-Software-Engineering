@@ -23,6 +23,11 @@ public class postgreSQL {
     
     //Connect method
     public void connect() throws SQLException {
+        try {
+            Thread.currentThread().getContextClassLoader().loadClass("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         this.con = DriverManager.getConnection(jdbcURL, username, password);
     }
 
