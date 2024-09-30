@@ -77,24 +77,27 @@ public class Model {
 			}
 		}
 
-		
-		/*Connects to the database, will only work on the vm, if you try to run on your 
-		local machine, it will not connect */
-		SQL.connect();
-		//Run addID method, returns ID added if codename is needed, otherwise source codename from existing id in db
-		String potentialCodeName = SQL.addID(id);
-		if (potentialCodeName != "ID added") {
-			codeName = potentialCodeName;
-			if(team =='g'){
-				greenFields[currentRowHead+1].setText(codeName);
+		try {
+			/*Connects to the database, will only work on the vm, if you try to run on your 
+			local machine, it will not connect */
+			SQL.connect();
+			//Run addID method, returns ID added if codename is needed, otherwise source codename from existing id in db
+			String potentialCodeName = SQL.addID(id);
+			if (potentialCodeName != "ID added") {
+				codeName = potentialCodeName;
+				if(team =='g'){
+					greenFields[currentRowHead+1].setText(codeName);
+				}
+				else if(team == 'r'){
+					redFields[currentRowHead+1].setText(codeName);
+				}
 			}
-			else if(team == 'r'){
-				redFields[currentRowHead+1].setText(codeName);
-			}
+			SQL.addCodename(codeName);
+			//SQL Disconnect
+			SQL.disconnect();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		SQL.addCodename(codeName);
-		//SQL Disconnect
-		SQL.disconnect();
 		
 		Player tempPlayer = new Player(id, codeName, team, equipmentID);
 		if(team =='g'){
