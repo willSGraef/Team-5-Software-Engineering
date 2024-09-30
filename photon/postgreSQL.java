@@ -86,18 +86,21 @@ public class postgreSQL {
         ArrayList<String> cnArray = new ArrayList<String>();
 
         while (rs.next()) {
-            idArray.add(rs.getString(0));
-            cnArray.add(rs.getString(1));
+            idArray.add(rs.getString(1));
+            cnArray.add(rs.getString(2));
         }
 
         boolean idExists = false; //False if the id doesn't exist, true if it does
-        for (int i = 0; i <= idArray.size(); i++) {
-            if (idArray.get(i).equals(String.valueOf(id))) {
-                idExists = true;
-            }
-        } 
+        System.out.println("Array size: " + idArray.size());
+        if (idArray.size() >= 1) {
+			for (int i = idArray.size() - 1; i > 0; i--) {
+				if (idArray.get(i).equals(String.valueOf(id))) {
+					idExists = true;
+				}
+			} 
+		}
         //Return the associated codename of the player ID found in the table
-        if (idExists = true) {
+        if (idExists == true) {
             return cnArray.get(idArray.indexOf(String.valueOf(id)));
         }
         //Add ID in the case that it doesnt exist and add a placeholder name for codename to search for later
@@ -107,8 +110,9 @@ public class postgreSQL {
                 INSERT INTO players (id, codename)
                 VALUES (%s, %s)
             """.formatted(id, "PLACEHOLDER");
+            System.out.println(query);
             p = con.prepareStatement(query);
-            rs = p.executeQuery();
+            p.executeUpdate();
             return "ID added";
         }
     }
@@ -118,9 +122,10 @@ public class postgreSQL {
         query =
         """
             UPDATE players
-            SET codename = %s
-            WHERE codename = 'PLACEHOLDER';
+            SET codename = "%s"
+            WHERE codename = "PLACEHOLDER";
         """.formatted(codename);
+        System.out.println(query);
         p = con.prepareStatement(query);
         rs = p.executeQuery();
     }

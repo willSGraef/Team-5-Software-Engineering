@@ -1,7 +1,7 @@
 
 
 SUBDIR=photon/
-JFILES=Controller.java Game.java Model.java Player.java postgreSQL.java SplashScreen.java View.java UDP_Client.java UDP_Server.java
+JFILES=Controller.java Game.java Model.java postgreSQL.java Player.java SplashScreen.java View.java UDP_Client.java UDP_Server.java
 
 SRC_FILES=$(addprefix ${SUBDIR}, ${JFILES})
 
@@ -11,8 +11,10 @@ main: ${SRC_FILES}
 	javac $^
 
 run:
-	java photon/Game
-	@echo "---> to clean use: make clean"
+	java -classpath $(CURDIR)/lib/postgresql-42.7.4.jar:. photon/Game 
+	
+	
+	
 
 clean: 
 	ifeq ($(OS),Windows_NT)
