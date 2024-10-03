@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JTextField;
 
@@ -13,8 +14,8 @@ public class Model {
 	private JTextField[] redFields = new JTextField[45];
 	private JTextField[] greenFields = new JTextField[45];
 
-	private Player[] redTeam = new Player[15];
-	private Player[] greenTeam = new Player[15];
+	private HashMap<Integer, Player> redTeam;	// = new HashMap<Player, Integer>();
+	private HashMap<Integer, Player> greenTeam;	// = new HashMap<Player, Integer>();
 
 	private int activeField = 0; // 0-29, 
 
@@ -23,10 +24,12 @@ public class Model {
 
 	public Model(){
 		
-		for (int i = 0; i < 15; i++){
-			redTeam[i] = new Player();
-			greenTeam[i] = new Player();
-		}
+
+		// DEPRECATED: used for previous array implementation of players
+		// for (int i = 0; i < 15; i++){
+		// 	redTeam[i] = new Player();
+		// 	greenTeam[i] = new Player();
+		// }
 	}
 
 
@@ -105,10 +108,10 @@ public class Model {
 		
 		Player tempPlayer = new Player(id, codeName, team, equipmentID);
 		if(team =='g'){
-			greenTeam[currentRowHead/2] = tempPlayer;
+			greenTeam.put(equipmentID, tempPlayer);
 		}
 		else if(team == 'r'){
-			redTeam[currentRowHead/2] = tempPlayer;
+			redTeam.put(equipmentID, tempPlayer);
 		}
 
 		// Send equipment ID via UDP
@@ -126,11 +129,11 @@ public class Model {
 	}
 
 	// deletes a player from the in-game teams, but not the database.
-	public void deletePlayer(char team, int entryNumber){
+	public void deletePlayer(char team, int eID){
 		if(team == 'g')
-			greenTeam[entryNumber] = null;
+			greenTeam.remove(eID);
 		else if(team == 'r')
-			redTeam[entryNumber] = null;
+			redTeam.remove(eID);
 	}
 
 	// add EntryField Method

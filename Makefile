@@ -1,5 +1,3 @@
-
-
 SUBDIR=photon/
 JFILES=Controller.java Game.java Model.java postgreSQL.java Player.java SplashScreen.java View.java UDP_Client.java UDP_Server.java
 
@@ -15,11 +13,10 @@ run:
 	
 	
 	
-
 clean: 
-	ifeq ($(OS),Windows_NT)
+ifeq ($(OS),Windows_NT)
 #		have not verified this works
-		del photon/*.class
-	else
-		rm photon/*.class
-	endif
+	del photon/*.class
+else
+	rm photon/*.class
+endif
