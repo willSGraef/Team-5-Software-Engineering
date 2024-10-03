@@ -81,18 +81,22 @@ public class Model {
 			/*Connects to the database, will only work on the vm, if you try to run on your 
 			local machine, it will not connect */
 			SQL.connect();
+			System.out.println("Original codename: " + codeName);
 			//Run addID method, returns ID added if codename is needed, otherwise source codename from existing id in db
 			String potentialCodeName = SQL.addID(id);
-			if (potentialCodeName != "ID added") {
+			if (potentialCodeName != "ID added" && potentialCodeName != "PLACEHOLDER found") {
+				SQL.addCodename(potentialCodeName);
 				codeName = potentialCodeName;
-				if(team =='g'){
-					greenFields[currentRowHead+1].setText(codeName);
-				}
-				else if(team == 'r'){
-					redFields[currentRowHead+1].setText(codeName);
-				}
 			}
-			SQL.addCodename(codeName);
+			else {
+				SQL.addCodename(codeName);
+			}
+			if(team =='g'){
+				greenFields[currentRowHead+1].setText(codeName);
+			}
+			else if(team == 'r'){
+				redFields[currentRowHead+1].setText(codeName);
+			}
 			//SQL Disconnect
 			SQL.disconnect();
 		} catch (Exception e) {

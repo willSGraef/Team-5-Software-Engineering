@@ -101,7 +101,13 @@ public class postgreSQL {
 		}
         //Return the associated codename of the player ID found in the table
         if (idExists == true) {
-            return cnArray.get(idArray.indexOf(String.valueOf(id)));
+            String item = cnArray.get(idArray.indexOf(String.valueOf(id)));
+            if (item.equals("PLACEHOLDER")) {
+                return "PLACEHOLDER found";
+            }
+            else {
+                return cnArray.get(idArray.indexOf(String.valueOf(id)));
+            }
         }
         //Add ID in the case that it doesnt exist and add a placeholder name for codename to search for later
         else {
@@ -109,7 +115,7 @@ public class postgreSQL {
             """
                 INSERT INTO players (id, codename)
                 VALUES (%s, %s)
-            """.formatted(id, "PLACEHOLDER");
+            """.formatted(id, "\'PLACEHOLDER\'");
             System.out.println(query);
             p = con.prepareStatement(query);
             p.executeUpdate();
@@ -119,15 +125,20 @@ public class postgreSQL {
 
     public void addCodename(String codename) throws SQLException {
         //Add codename to field labeled placeholder
-        query =
-        """
-            UPDATE players
-            SET codename = "%s"
-            WHERE codename = "PLACEHOLDER";
-        """.formatted(codename);
-        System.out.println(query);
-        p = con.prepareStatement(query);
-        rs = p.executeQuery();
+        if (codename.length() != 0) {
+            query =
+            """
+                UPDATE players
+                SET codename = '%s'
+                WHERE codename = 'PLACEHOLDER';
+            """.formatted(codename);
+            System.out.println(query);
+            p = con.prepareStatement(query);
+            p.executeUpdate();
+        }
+        else {
+            System.out.println("That's a new ID please enter a codename!");
+        }
     }
 
     public static void main(String[] args) throws SQLException {
