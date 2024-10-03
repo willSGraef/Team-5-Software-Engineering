@@ -110,12 +110,13 @@ public class Model {
 			UDP_Client udpClient = new UDP_Client();
 			udpClient.UDP_SendData(message);
 			udpClient.close();
+			System.out.println("Equipment ID sent: " + message);
 		} catch (IOException e) {
 			System.out.println("Error sending data via UDP: " + e.getMessage());
 		}
 
 		System.out.println("Success!" + tempPlayer.getID());
-		System.out.println("Equipment ID sent: " + message);
+		//System.out.println("Equipment ID sent: " + message);
 	}
 
 	// deletes a player from the in-game teams, but not the database.
