@@ -116,7 +116,6 @@ public class Model {
 		}
 
 		System.out.println("Success!" + tempPlayer.getID());
-		//System.out.println("Equipment ID sent: " + message);
 	}
 
 	// deletes a player from the in-game teams, but not the database.
@@ -185,7 +184,4 @@ public class Model {
 			activeField--;
 		}
 	}
-
-
-
 }
