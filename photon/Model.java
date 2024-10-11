@@ -116,20 +116,22 @@ public class Model {
 
 		System.out.println("Success!" + tempPlayer.getID());
 
-		/ Transmit the equipment ID to the server
+		// Transmit the equipment ID to the server
     	sendEquipmentID(equipmentID);
 	}
 
-	// New method to handle UDP transmission
+	//handle UDP transmission
 	public void sendEquipmentID(int equipmentID) {
 		try {
-			// Assuming you have an initialized UDP_Client instance named udpClient
-			String message = String.valueOf(equipmentID);
-			UDP_Client.UDP_SendData(message); // Send the equipment ID
+			// Initialize the UDP client
+			UDP_Client udpClient = new UDP_Client();
+			
+			// Send the equipment ID to the server
+			udpClient.UDP_SendData(String.valueOf(equipmentID)); // Convert the equipment ID to a string
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-}
+	}
 
 	// deletes a player from the in-game teams, but not the database.
 	public void deletePlayer(char team, int eID){

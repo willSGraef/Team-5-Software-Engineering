@@ -10,9 +10,8 @@ public class UDP_Server {
     private DatagramSocket serverSocket;
 
     //Constructor that inits local host ip
-    public UDP_Server(DatagramSocket serverSocket) {
-        this.serverSocket = serverSocket;
-        //serverSocket = new DatagramSocket(7501); // Listening on port 7501
+    public UDP_Server() throws IOException {
+        this.serverSocket = new DatagramSocket(7501); // Listening on port 7501
     }
 
     //Receive data method, (From client to server)
@@ -23,8 +22,6 @@ public class UDP_Server {
                 DatagramPacket packetReceive = new DatagramPacket(data, data.length);
                 //receive the message 
                 serverSocket.receive(packetReceive);
-                //InetAddress inetAddress = packetReceive.getAddress();
-                //int port = packetReceive.getPort();
                 // Convert the received byte data to a string
                 String message = new String(packetReceive.getData(), 0, packetReceive.getLength());
                 System.out.println("Received code from client: " + message);
