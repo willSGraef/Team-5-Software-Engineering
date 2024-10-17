@@ -40,18 +40,21 @@ public class Controller implements ActionListener, KeyListener{
 	{
 		System.out.println(e.getKeyCode());
 		switch (e.getKeyCode()) {
-			case KeyEvent.VK_INSERT:
+			case KeyEvent.VK_INSERT: // perhaps use a different key?
 				try {
 					model.addPlayer();
 				} catch (Exception e1) {
 					System.out.println("SQL ERROR");
 				}
 				break;
-			case KeyEvent.VK_RIGHT:
+			case KeyEvent.VK_RIGHT: //perhaps change to a function key
 				model.shiftActiveFieldForward();
 				break;
-			case KeyEvent.VK_LEFT:
+			case KeyEvent.VK_LEFT: //perhaps change to a function key
 				model.shiftActiveFieldBackward();
+				break;
+			case KeyEvent.VK_F12:
+				model.clearPlayers();
 				break;
 			default:
 				break;
