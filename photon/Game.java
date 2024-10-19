@@ -32,7 +32,6 @@ public class Game{
             // Initialize and start the UDP server in its own thread
             UDP_Server udpServer = new UDP_Server();
             new Thread(udpServer).start();
-            System.out.println("Server is running and ready to receive data...");
     
         } catch (IOException e) {
             e.printStackTrace();

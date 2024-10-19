@@ -12,6 +12,7 @@ public class UDP_Server implements Runnable { //implement runnable
     //Constructor that inits local host ip
     public UDP_Server() throws IOException {
         this.serverSocket = new DatagramSocket(7501); // Listening on port 7501
+        System.out.println("Server is running and ready to receive data...");
     }
 
     // The run method will be executed when the thread starts
