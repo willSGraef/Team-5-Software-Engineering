@@ -4,7 +4,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket; 
 
 
-public class UDP_Server {
+public class UDP_Server implements Runnable { //implement runnable 
     //Class variables
     private byte[] data = new byte[1024];
     private DatagramSocket serverSocket;
@@ -14,8 +14,14 @@ public class UDP_Server {
         this.serverSocket = new DatagramSocket(7501); // Listening on port 7501
     }
 
+    // The run method will be executed when the thread starts
+    @Override
+    public void run() {
+        UDP_ReceiveData(); // Call the receive data method in the thread
+    }
+
     //Receive data method, (From client to server)
-    public void UDP_ReceiveData(){
+    public void UDP_ReceiveData(){ //create run class for thread here 
         while(true){
             try{
                 //create packet to receive the message

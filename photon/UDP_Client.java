@@ -15,7 +15,6 @@ public class UDP_Client {
     public UDP_Client() throws IOException {
         this.clientSocket = new DatagramSocket(7500);
         this.inetAddress = InetAddress.getByName("localhost");
-        //clientSocket = new DatagramSocket(7500); // Binding to port 7500
     }
     
     //Send data method, (From client to server)

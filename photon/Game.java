@@ -2,7 +2,6 @@ package photon;
 
 import java.awt.Toolkit;
 import java.io.IOException;
-import java.net.DatagramSocket;
 
 
 public class Game{
@@ -29,17 +28,15 @@ public class Game{
         // Close the splash screen
         splash.closeSplash();
 
-        // Start the UDP server in a separate thread so it can run in the background
-        new Thread(() -> {
-            try {
-                UDP_Server udpServer = new UDP_Server();
-                System.out.println("Server is running and ready to receive data...");
-                udpServer.UDP_ReceiveData();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-
+        try {
+            // Initialize and start the UDP server in its own thread
+            UDP_Server udpServer = new UDP_Server();
+            new Thread(udpServer).start();
+            System.out.println("Server is running and ready to receive data...");
+    
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // Launch the game
         Game g = new Game();
         g.run();
