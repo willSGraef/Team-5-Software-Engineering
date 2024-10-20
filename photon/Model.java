@@ -13,8 +13,8 @@ public class Model {
 	private JTextField[] redFields = new JTextField[45];
 	private JTextField[] greenFields = new JTextField[45];
 
-	private HashMap<Integer, Player> redTeam;	// = new HashMap<Player, Integer>();
-	private HashMap<Integer, Player> greenTeam;	// = new HashMap<Player, Integer>();
+	private HashMap<Integer, Player> redTeam;
+	private HashMap<Integer, Player> greenTeam;
 
 	private int activeField = 0; // 0-29, 
 
@@ -23,12 +23,6 @@ public class Model {
 
 	public Model(){
 		
-
-		// DEPRECATED: used for previous array implementation of players
-		// for (int i = 0; i < 15; i++){
-		// 	redTeam[i] = new Player();
-		// 	greenTeam[i] = new Player();
-		// }
 	}
 
 
@@ -197,5 +191,12 @@ public class Model {
 		{
 			activeField--;
 		}
+	}
+	public HashMap<Integer, Player> getGreenTeam() {
+		return greenTeam;
+	}
+
+	public HashMap<Integer, Player> getRedTeam() {
+		return redTeam;
 	}
 }
