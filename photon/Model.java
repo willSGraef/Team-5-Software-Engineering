@@ -2,7 +2,6 @@ package photon;
 import java.awt.Color;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JTextField;
@@ -14,8 +13,8 @@ public class Model {
 	private JTextField[] redFields = new JTextField[45];
 	private JTextField[] greenFields = new JTextField[45];
 
-	private HashMap<Integer, Player> redTeam;	// = new HashMap<Player, Integer>();
-	private HashMap<Integer, Player> greenTeam;	// = new HashMap<Player, Integer>();
+	private HashMap<Integer, Player> redTeam;
+	private HashMap<Integer, Player> greenTeam;
 
 	private int activeField = 0; // 0-29, 
 
@@ -24,12 +23,6 @@ public class Model {
 
 	public Model(){
 		
-
-		// DEPRECATED: used for previous array implementation of players
-		// for (int i = 0; i < 15; i++){
-		// 	redTeam[i] = new Player();
-		// 	greenTeam[i] = new Player();
-		// }
 	}
 
 
@@ -114,18 +107,23 @@ public class Model {
 			redTeam.put(equipmentID, tempPlayer);
 		}
 
-		// Send equipment ID via UDP
-		String message = team + " " + equipmentID;
-		try {
-			UDP_Client udpClient = new UDP_Client();
-			udpClient.UDP_SendData(message);
-			udpClient.close();
-			System.out.println("Equipment ID sent: " + message);
-		} catch (IOException e) {
-			System.out.println("Error sending data via UDP: " + e.getMessage());
-		}
-
 		System.out.println("Success!" + tempPlayer.getID());
+
+		// Transmit the equipment ID to the server
+    	sendEquipmentID(equipmentID);
+	}
+
+	//handle UDP transmission
+	public void sendEquipmentID(int equipmentID) {
+		try {
+			// Initialize the UDP client
+			UDP_Client udpClient = new UDP_Client();
+			
+			// Send the equipment ID to the server
+			udpClient.UDP_SendData(String.valueOf(equipmentID)); // Convert the equipment ID to a string
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// deletes a player from the in-game teams, but not the database.
@@ -213,5 +211,12 @@ public class Model {
 		{
 			activeField--;
 		}
+	}
+	public HashMap<Integer, Player> getGreenTeam() {
+		return greenTeam;
+	}
+
+	public HashMap<Integer, Player> getRedTeam() {
+		return redTeam;
 	}
 }
