@@ -17,9 +17,11 @@ public class GameCountDown {
     private Game gameInstance; // Reference to the game instance to start it after the countdown
     private JWindow countdownWindow; // JWindow for displaying the countdown
     private JLabel countdownLabel; // JLabel to display the countdown
+    private CountDownListener listener;
 
-    public GameCountDown(Game game) {
+    public GameCountDown(Game game, CountDownListener listener) {
         this.gameInstance = game;
+        this.listener = listener;
 
         // Create and configure the countdown window (similar to the splash screen)
         countdownWindow = new JWindow();
@@ -61,8 +63,7 @@ public class GameCountDown {
                 if (remainingTime <= 0) {
                     timer.cancel();
                     closeCountdown();
-                    System.out.println("Game starting now!");
-                    gameInstance.run(); // Start the game after countdown
+                    listener.onCountdownFinished();
                 }
             }
         };
