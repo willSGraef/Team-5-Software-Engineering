@@ -3,10 +3,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
 
 
-public class Controller implements ActionListener, KeyListener{
+public class Controller implements ActionListener, KeyListener, CountDownListener {
 
 	private View view;
 	private Model model;
@@ -36,8 +35,8 @@ public class Controller implements ActionListener, KeyListener{
     }
 	
 
-	public void keyPressed(KeyEvent e) 
-	{
+	@Override
+	public void keyPressed(KeyEvent e) {
 		System.out.println(e.getKeyCode());
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_INSERT:
@@ -53,6 +52,12 @@ public class Controller implements ActionListener, KeyListener{
 			case KeyEvent.VK_LEFT:
 				model.shiftActiveFieldBackward();
 				break;
+			case KeyEvent.VK_F5: // Check for F5 key
+				// Start the countdown and wait for the callback to trigger startGame
+                Game gameInstance = new Game();
+                GameCountDown countdown = new GameCountDown(gameInstance, this); // Pass 'this' as the listener
+                countdown.showCountdown();
+				break;
 			default:
 				break;
 		}
@@ -61,5 +66,12 @@ public class Controller implements ActionListener, KeyListener{
 	public void keyTyped(KeyEvent e){	}
 	public void keyReleased(KeyEvent e){	}
 	public void actionPerformed(ActionEvent e) {    }
+
+	@Override
+    public void onCountdownFinished() {
+        // This method will be called when the countdown is finished
+        System.out.println("Countdown finished, starting the game...");
+        view.startGame(); // Now you can start the game after the countdown is complete
+    }
     
 }

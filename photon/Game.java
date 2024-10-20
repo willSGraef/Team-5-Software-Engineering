@@ -1,6 +1,7 @@
 package photon;
 
 import java.awt.Toolkit;
+import java.io.IOException;
 
 
 public class Game{
@@ -27,6 +28,14 @@ public class Game{
         // Close the splash screen
         splash.closeSplash();
 
+        try {
+            // Initialize and start the UDP server in its own thread
+            UDP_Server udpServer = new UDP_Server();
+            new Thread(udpServer).start();
+    
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // Launch the game
         Game g = new Game();
         g.run();

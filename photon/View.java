@@ -1,16 +1,9 @@
 package photon;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.KeyListener;
-import java.awt.event.WindowFocusListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import java.util.ArrayList;
-import javax.swing.BorderFactory;
 
 
 public class View extends JFrame{
@@ -105,6 +98,29 @@ public class View extends JFrame{
 		
     	this.setLayout(null);  
     	
+	}
+
+	public void startGame() {
+		// Hide the current window
+		this.setVisible(false);
+		
+		// Create a new game window
+		JFrame gameFrame = new JFrame("Game");
+		gameFrame.setSize(800, 600); // Set the size of the game window
+		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gameFrame.getContentPane().setBackground(Color.BLACK);
+		
+		// Add your game components here, e.g., a game canvas or panel
+		JPanel gamePanel = new JPanel() {
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				// Add your game drawing code here
+			}
+		};
+		
+		gameFrame.add(gamePanel);
+		gameFrame.setVisible(true); // Show the game window
 	}
 
 	public void paintComponent(Graphics g)
