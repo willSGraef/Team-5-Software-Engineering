@@ -1,3 +1,4 @@
+package photon;
 //Java postgreSQL Connection File
 
 import java.sql.Connection;
@@ -14,14 +15,19 @@ public class postgreSQL {
     String password = "student";
     /*Init basic sql components, be sure to properly look at the documentation 
     for these under java.sql to know their functionaility*/
-    Connection con = null;
-    PreparedStatement p = null;
-    ResultSet rs = null;
+    Connection con;
+    PreparedStatement p;
+    ResultSet rs;
     //String for different queries we use in this class
-    String query = null;
+    String query;
     
     //Connect method
     public void connect() throws SQLException {
+        try {
+            Thread.currentThread().getContextClassLoader().loadClass("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         this.con = DriverManager.getConnection(jdbcURL, username, password);
     }
 
@@ -80,19 +86,28 @@ public class postgreSQL {
         ArrayList<String> cnArray = new ArrayList<String>();
 
         while (rs.next()) {
-            idArray.add(rs.getString(0));
-            cnArray.add(rs.getString(1));
+            idArray.add(rs.getString(1));
+            cnArray.add(rs.getString(2));
         }
 
         boolean idExists = false; //False if the id doesn't exist, true if it does
-        for (int i = 0; i <= idArray.size(); i++) {
-            if (idArray.get(i).equals(String.valueOf(id))) {
-                idExists = true;
-            }
-        } 
+        System.out.println("Array size: " + idArray.size());
+        if (idArray.size() >= 1) {
+			for (int i = idArray.size() - 1; i > 0; i--) {
+				if (idArray.get(i).equals(String.valueOf(id))) {
+					idExists = true;
+				}
+			} 
+		}
         //Return the associated codename of the player ID found in the table
-        if (idExists = true) {
-            return cnArray.get(idArray.indexOf(String.valueOf(id)));
+        if (idExists == true) {
+            String item = cnArray.get(idArray.indexOf(String.valueOf(id)));
+            if (item.equals("PLACEHOLDER")) {
+                return "PLACEHOLDER found";
+            }
+            else {
+                return cnArray.get(idArray.indexOf(String.valueOf(id)));
+            }
         }
         //Add ID in the case that it doesnt exist and add a placeholder name for codename to search for later
         else {
@@ -100,23 +115,30 @@ public class postgreSQL {
             """
                 INSERT INTO players (id, codename)
                 VALUES (%s, %s)
-            """.formatted(id, "PLACEHOLDER");
+            """.formatted(id, "\'PLACEHOLDER\'");
+            System.out.println(query);
             p = con.prepareStatement(query);
-            rs = p.executeQuery();
+            p.executeUpdate();
             return "ID added";
         }
     }
 
     public void addCodename(String codename) throws SQLException {
         //Add codename to field labeled placeholder
-        query =
-        """
-            UPDATE players
-            SET codename = %s
-            WHERE codename = 'PLACEHOLDER';
-        """.formatted(codename);
-        p = con.prepareStatement(query);
-        rs = p.executeQuery();
+        if (codename.length() != 0) {
+            query =
+            """
+                UPDATE players
+                SET codename = '%s'
+                WHERE codename = 'PLACEHOLDER';
+            """.formatted(codename);
+            System.out.println(query);
+            p = con.prepareStatement(query);
+            p.executeUpdate();
+        }
+        else {
+            System.out.println("That's a new ID please enter a codename!");
+        }
     }
 
     public static void main(String[] args) throws SQLException {
