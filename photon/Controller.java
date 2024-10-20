@@ -3,6 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 
 
 public class Controller implements ActionListener, KeyListener, CountDownListener {
@@ -71,6 +72,14 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
     public void onCountdownFinished() {
         // This method will be called when the countdown is finished
         System.out.println("Countdown finished, starting the game...");
+
+		try {
+			// Create an instance of the UDP_Client and send code 202
+			UDP_Client udpClient = new UDP_Client();
+			udpClient.UDP_SendData("202"); // Send code 202 to the server
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         view.startGame(); // Now you can start the game after the countdown is complete
     }
     
