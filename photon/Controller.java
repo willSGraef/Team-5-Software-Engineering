@@ -40,19 +40,21 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 	public void keyPressed(KeyEvent e) {
 		System.out.println(e.getKeyCode());
 		switch (e.getKeyCode()) {
-			case KeyEvent.VK_INSERT:
+			case KeyEvent.VK_F3: 
 				try {
 					model.addPlayer();
 				} catch (Exception e1) {
 					System.out.println("SQL ERROR");
 				}
 				break;
-			case KeyEvent.VK_RIGHT:
+			case KeyEvent.VK_F2: 
 				model.shiftActiveFieldForward();
 				break;
-			case KeyEvent.VK_LEFT:
+			case KeyEvent.VK_F1: 
 				model.shiftActiveFieldBackward();
 				break;
+			case KeyEvent.VK_F12:
+				model.clearPlayers();
 			case KeyEvent.VK_F5: // Check for F5 key
 				// Start the countdown and wait for the callback to trigger startGame
                 Game gameInstance = new Game();
