@@ -58,6 +58,8 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 				break;
 			case KeyEvent.VK_F5: // Check for F5 key
 				// Start the countdown and wait for the callback to trigger startGame
+				//Clear previous view
+				this.view.dispose();
                 Game gameInstance = new Game();
                 GameCountDown countdown = new GameCountDown(gameInstance, this); // Pass 'this' as the listener
                 countdown.showCountdown();

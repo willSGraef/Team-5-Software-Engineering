@@ -13,8 +13,8 @@ public class Model {
 	private JTextField[] redFields = new JTextField[45];
 	private JTextField[] greenFields = new JTextField[45];
 
-	private HashMap<Integer, Player> redTeam;
-	private HashMap<Integer, Player> greenTeam;
+	private HashMap<Integer, Player> redTeam = new HashMap<Integer, Player>();
+	private HashMap<Integer, Player> greenTeam = new HashMap<Integer, Player>();
 
 	private int activeField = 0; // 0-29, 
 
@@ -102,9 +102,15 @@ public class Model {
 		Player tempPlayer = new Player(id, codeName, team, equipmentID);
 		if(team =='g'){
 			greenTeam.put(equipmentID, tempPlayer);
+			System.out.println("Added to green team");
 		}
 		else if(team == 'r'){
-			redTeam.put(equipmentID, tempPlayer);
+			try {
+				redTeam.put(equipmentID, tempPlayer);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			System.out.println("Added to red team");
 		}
 
 		System.out.println("Success!" + tempPlayer.getID());

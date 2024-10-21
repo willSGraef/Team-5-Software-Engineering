@@ -26,5 +26,15 @@ public class PlayerAction {
 		}
 	}
 
+	//Mutators
+
+	public int getGreenTeamScore() {
+		return this.greenTeamScore;
+	}
+
+	public int getRedTeamScore() {
+		return this.redTeamScore;
+	}
+
 	
 }

@@ -3,16 +3,35 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.LayoutManager;
+import java.time.chrono.JapaneseEra;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Vector;
 
 
 public class View extends JFrame{
+	Color redFieldColor = new Color(235, 110, 110);
+	Color greenFieldColor = new Color(127, 235, 110);
 
 	private Model model;
 
@@ -28,9 +47,9 @@ public class View extends JFrame{
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().setBackground(Color.black);
 		this.setVisible(true);
-		Color redFieldColor = new Color(235, 110, 110);
-		Color greenFieldColor = new Color(127, 235, 110);
 		this.setLayout(null);  
+		
+		
 
 
 		// Team titles
@@ -231,23 +250,134 @@ public class View extends JFrame{
 	public void startGame() {
 		// Hide the current window
 		this.setVisible(false);
+		PlayerAction pa = new PlayerAction(model);
 		
+		int frameWidth = 800;
+		int frameHeight = 600;
+
+		String[] columnNames = {"PLAYER: ", "SCORE: "};
+
 		// Create a new game window
 		JFrame gameFrame = new JFrame("Game");
-		gameFrame.setSize(800, 600); // Set the size of the game window
+		// Clear gameFrame layout for absolute positioning
+		gameFrame.setLayout(new GridBagLayout());
+		gameFrame.setSize(frameWidth, frameHeight); // Set the size of the game window
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.getContentPane().setBackground(Color.BLACK);
+		GridBagConstraints constraint = new GridBagConstraints();
+		constraint.fill = GridBagConstraints.BOTH;
 		
-		// Add your game components here, e.g., a game canvas or panel
-		JPanel gamePanel = new JPanel() {
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				// Add your game drawing code here
-			}
-		};
+		// Init team roster panels
+		JPanel redRosterPanel = new JPanel(new GridLayout(3,1));
+		// Theme components
+		redRosterPanel.setBackground(Color.BLACK);
+		redRosterPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+		// Apply constraints
+		constraint.weighty = 0.3;
+		constraint.weightx = 0.5;
+		constraint.gridx = 0;
+		constraint.gridy = 0;
+		// Add components
+		// RED ROSTER
+		// Init and add red team label
+		JLabel redTeamLabel = new JLabel("RED TEAM", SwingConstants.CENTER);
+		redTeamLabel.setForeground(redFieldColor);
+		redRosterPanel.add(redTeamLabel);
+
+		// Init and add red team list of players
+		DefaultTableModel redData = new DefaultTableModel(columnNames, 0);
+		HashMap<Integer, Player> redMap = model.getRedTeam();
+
+		for(Player p : redMap.values()) {
+			Vector<String> row = new Vector<String>();
+			row.add(p.getName());
+			row.add((String.valueOf(p.getScore())));
+			redData.addRow(row);
+		}
+
+		JTable redTable = new JTable(redData);
+		redTable.setBackground(Color.BLACK);
+		redTable.setForeground(redFieldColor);
+		redRosterPanel.add(redTable);
+
+		// Init and add red team total score label
+		JLabel redTotalScore = new JLabel(String.valueOf(pa.getRedTeamScore()), SwingConstants.RIGHT);
+		redTotalScore.setForeground(greenFieldColor);
+		redRosterPanel.add(redTotalScore);
+
+		gameFrame.add(redRosterPanel, constraint);
+
+		// GREEN ROSTER
+
+		JPanel greenRosterPanel = new JPanel(new GridLayout(3,1));
+		// Theme components
+		greenRosterPanel.setBackground(Color.BLACK);
+		greenRosterPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+		// Apply constraints
+		constraint.weighty = 0.3;
+		constraint.gridx = 1;
+		constraint.gridy = 0;
+
+		// Add components
+		// Init and add green team label
+		JLabel greenTeamLabel = new JLabel("GREEN TEAM", SwingConstants.CENTER);
+		greenTeamLabel.setForeground(greenFieldColor);
+		greenRosterPanel.add(greenTeamLabel);
+
+		// Init and add green team list of players and scores
+		DefaultTableModel greenData = new DefaultTableModel(columnNames, 0);
+		HashMap<Integer, Player> greenMap = model.getGreenTeam();
+
+		for(Player p : greenMap.values()) {
+			Vector<String> row = new Vector<String>();
+			row.add(p.getName());
+			row.add((String.valueOf(p.getScore())));
+			greenData.addRow(row);
+		}
+
+		JTable greenTable = new JTable(greenData);
+		greenTable.setBackground(Color.BLACK);
+		greenTable.setForeground(greenFieldColor);
+		greenRosterPanel.add(greenTable);
+
+		// Init and add green team total score label
+		JLabel greenTotalScore = new JLabel(String.valueOf(pa.getGreenTeamScore()), SwingConstants.RIGHT);
+		greenTotalScore.setForeground(greenFieldColor);
+		greenRosterPanel.add(greenTotalScore);
+
+		gameFrame.add(greenRosterPanel, constraint);
+
+
+		// Init scorePanel
+		JPanel scorePanel = new JPanel(new GridLayout(3, 1));
+		scorePanel.setBackground(Color.DARK_GRAY);
+		scorePanel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+		constraint.weighty = 0.4;
+		constraint.gridx = 0;
+		constraint.gridy = 1;
+		constraint.gridwidth = 3;
+		// Add panel title
+		JLabel scorePanelTitle = new JLabel("CURRENT GAME ACTION", SwingConstants.CENTER);
+		scorePanelTitle.setForeground(Color.CYAN);
+		scorePanel.add(scorePanelTitle);
+
+		gameFrame.add(scorePanel, constraint);
+
+		// Init timerPanel
+		JPanel timerPanel = new JPanel(new GridLayout());
+		timerPanel.setBackground(Color.BLACK);
+		timerPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+		constraint.weighty = 0.1;
+		constraint.gridx = 0;
+		constraint.gridy = 2;
+		constraint.gridwidth = 3;
+		// Add base timer
+		JLabel timerLabel = new JLabel("TIME: 0:00", SwingConstants.CENTER);
+		timerLabel.setForeground(Color.CYAN);
+		timerPanel.add(timerLabel);
+
+		gameFrame.add(timerPanel, constraint);
 		
-		gameFrame.add(gamePanel);
 		gameFrame.setVisible(true); // Show the game window
 	}
 
