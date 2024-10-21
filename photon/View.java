@@ -21,7 +21,7 @@ public class View extends JFrame{
 		model = m;
 		c.setView(this);
 		this.addKeyListener(c);
-		this.setFocusTraversalKeysEnabled(false); //this lets us change highlighted entry with the tab key
+		this.setFocusTraversalKeysEnabled(false); 
 		this.setTitle("Photon");
         this.setSize(815, 840);
         this.setFocusable(true);
@@ -92,8 +92,6 @@ public class View extends JFrame{
 		clearPlayersGuide.setForeground(Color.green);
 		guides.add(clearPlayersGuide);
 
-		
-
 		// Red team column labels
 
 		Border redLine = BorderFactory.createLineBorder(Color.red);
@@ -123,8 +121,6 @@ public class View extends JFrame{
 		this.add(redTeamLabels);
 
 		// Green team column labels
-
-		
 
 		Border greenLine = BorderFactory.createLineBorder(Color.green);
 		JPanel greenTeamLabels = new JPanel();

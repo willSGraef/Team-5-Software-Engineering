@@ -39,17 +39,17 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 	public void keyPressed(KeyEvent e) {
 		System.out.println(e.getKeyCode());
 		switch (e.getKeyCode()) {
-			case KeyEvent.VK_F3: // perhaps use a different key?
+			case KeyEvent.VK_F3: 
 				try {
 					model.addPlayer();
 				} catch (Exception e1) {
 					System.out.println("SQL ERROR");
 				}
 				break;
-			case KeyEvent.VK_F2: //perhaps change to a function key
+			case KeyEvent.VK_F2: 
 				model.shiftActiveFieldForward();
 				break;
-			case KeyEvent.VK_F1: //perhaps change to a function key
+			case KeyEvent.VK_F1: 
 				model.shiftActiveFieldBackward();
 				break;
 			case KeyEvent.VK_F12:
