@@ -45,12 +45,9 @@ public class postgreSQL {
     //Creates players table
     public String createTable() throws SQLException {
         //Check for table named players already
-        query = 
-            """
-                SELECT count(*) FROM information_schema.tables
-                WHERE table_name = 'players' 
-                LIMIT 1;    
-            """;
+        query = "SELECT count(*) FROM information_schema.tables" +
+                "WHERE table_name = 'players'" +
+                "LIMIT 1;";
         p = con.prepareStatement(query);
         rs = p.executeQuery();
         rs.next();
@@ -58,13 +55,10 @@ public class postgreSQL {
             return "Table already exists!";
         }
         else { 
-            query = 
-            """
-                CREATE TABLE players (
-                id INT,
-                codename VARCHAR(30)
-                );
-            """;
+            query = "CREATE TABLE players (" +
+                "id INT," +
+                "codename VARCHAR(30)" +
+                ");";
             //Create table
             p = con.prepareStatement(query);
             rs = p.executeQuery();
@@ -76,10 +70,7 @@ public class postgreSQL {
         /*Returns player codename associated with already created ID if an id is found 
         OR adds the id to the database and returns "ID has been added"*/
         //Check if id already exists
-        query = 
-            """
-                SELECT id, codename FROM players;
-            """;
+        query = "SELECT id, codename FROM players;";
         p = con.prepareStatement(query);
         rs = p.executeQuery();
         ArrayList<String> idArray = new ArrayList<String>();
@@ -111,11 +102,8 @@ public class postgreSQL {
         }
         //Add ID in the case that it doesnt exist and add a placeholder name for codename to search for later
         else {
-            query = 
-            """
-                INSERT INTO players (id, codename)
-                VALUES (%s, %s)
-            """.formatted(id, "\'PLACEHOLDER\'");
+            query = "INSERT INTO players (id, codename)" +
+                "VALUES (%s, %s)".formatted(id, "\'PLACEHOLDER\'");
             System.out.println(query);
             p = con.prepareStatement(query);
             p.executeUpdate();
@@ -126,12 +114,9 @@ public class postgreSQL {
     public void addCodename(String codename) throws SQLException {
         //Add codename to field labeled placeholder
         if (codename.length() != 0) {
-            query =
-            """
-                UPDATE players
-                SET codename = '%s'
-                WHERE codename = 'PLACEHOLDER';
-            """.formatted(codename);
+            query = "UPDATE players" +
+                "SET codename = '%s'".formatted(codename) +
+                "WHERE codename = 'PLACEHOLDER';";
             System.out.println(query);
             p = con.prepareStatement(query);
             p.executeUpdate();
