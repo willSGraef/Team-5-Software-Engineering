@@ -45,8 +45,8 @@ public class postgreSQL {
     //Creates players table
     public String createTable() throws SQLException {
         //Check for table named players already
-        query = "SELECT count(*) FROM information_schema.tables" +
-                "WHERE table_name = 'players'" +
+        query = "SELECT count(*) FROM information_schema.tables\n" +
+                "WHERE table_name = 'players'\n" +
                 "LIMIT 1;";
         p = con.prepareStatement(query);
         rs = p.executeQuery();
@@ -55,9 +55,9 @@ public class postgreSQL {
             return "Table already exists!";
         }
         else { 
-            query = "CREATE TABLE players (" +
-                "id INT," +
-                "codename VARCHAR(30)" +
+            query = "CREATE TABLE players (\n" +
+                "id INT,\n" +
+                "codename VARCHAR(30)\n" +
                 ");";
             //Create table
             p = con.prepareStatement(query);
@@ -102,8 +102,9 @@ public class postgreSQL {
         }
         //Add ID in the case that it doesnt exist and add a placeholder name for codename to search for later
         else {
-            query = "INSERT INTO players (id, codename)" +
-                "VALUES (%s, %s)".formatted(id, "\'PLACEHOLDER\'");
+			String qFormatString = String.format("VALUES (%s, %s);", id, "\'PLACEHOLDER\'");
+            query = "INSERT INTO players (id, codename)\n" +
+                qFormatString;
             System.out.println(query);
             p = con.prepareStatement(query);
             p.executeUpdate();
@@ -114,12 +115,13 @@ public class postgreSQL {
     public void addCodename(String codename) throws SQLException {
         //Add codename to field labeled placeholder
         if (codename.length() != 0) {
-            query = "UPDATE players" +
-                "SET codename = '%s'".formatted(codename) +
-                "WHERE codename = 'PLACEHOLDER';";
-            System.out.println(query);
-            p = con.prepareStatement(query);
-            p.executeUpdate();
+			String qFormatString = String.format("SET codename = '%s'\n", codename);
+			query = "UPDATE players\n" +
+				qFormatString +
+				"WHERE codename = 'PLACEHOLDER';";
+			System.out.println(query);
+			p = con.prepareStatement(query);
+			p.executeUpdate();
         }
         else {
             System.out.println("That's a new ID please enter a codename!");
