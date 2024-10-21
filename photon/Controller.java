@@ -55,6 +55,7 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 				break;
 			case KeyEvent.VK_F12:
 				model.clearPlayers();
+				break;
 			case KeyEvent.VK_F5: // Check for F5 key
 				// Start the countdown and wait for the callback to trigger startGame
                 Game gameInstance = new Game();
