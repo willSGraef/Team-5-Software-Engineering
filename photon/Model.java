@@ -132,6 +132,27 @@ public class Model {
 		}
 	}
 
+	public Player getPlayerByEquipmentId(int equipmentID) {
+		// Look in both teams
+		if (redTeam.containsKey(equipmentID)) {
+			return redTeam.get(equipmentID);
+		} else if (greenTeam.containsKey(equipmentID)) {
+			return greenTeam.get(equipmentID);
+		}
+		return null; // Return null if player not found
+	}
+
+	public int getTeamScore(char team) {
+		int totalScore = 0;
+		HashMap<Integer, Player> teamMap = (team == 'r') ? redTeam : greenTeam;
+		
+		for (Player p : teamMap.values()) {
+			totalScore += p.getScore();
+		}
+		return totalScore;
+	}
+	
+
 	// deletes a player from the in-game teams, but not the database.
 	public void deletePlayer(char team, int eID){
 		if(team == 'g')

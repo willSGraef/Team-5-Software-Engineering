@@ -13,7 +13,7 @@ public class UDP_Client {
 
     //Constructor that inits local host ip
     public UDP_Client() throws IOException {
-        this.clientSocket = new DatagramSocket(7500);
+        this.clientSocket = new DatagramSocket(); //7500
         this.inetAddress = InetAddress.getByName("localhost");
     }
     

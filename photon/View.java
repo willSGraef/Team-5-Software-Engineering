@@ -16,13 +16,16 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.text.BadLocationException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +37,13 @@ public class View extends JFrame{
 	Color greenFieldColor = new Color(127, 235, 110);
 
 	private Model model;
+	private JTextArea actionFeed;
+
+	// Define score labels as instance variables
+	private JLabel redTotalScore;
+	private JLabel greenTotalScore;
+	private JTable redTable;
+	private JTable greenTable;
 
 	public View(Controller c, Model m)
 	{
@@ -242,8 +252,6 @@ public class View extends JFrame{
 				}
 			}
 		}
-		
-    	
     	
 	}
 
@@ -295,13 +303,13 @@ public class View extends JFrame{
 			redData.addRow(row);
 		}
 
-		JTable redTable = new JTable(redData);
+		redTable = new JTable(redData);
 		redTable.setBackground(Color.BLACK);
 		redTable.setForeground(redFieldColor);
 		redRosterPanel.add(redTable);
 
 		// Init and add red team total score label
-		JLabel redTotalScore = new JLabel(String.valueOf(pa.getRedTeamScore()), SwingConstants.RIGHT);
+		redTotalScore = new JLabel(String.valueOf(pa.getRedTeamScore()), SwingConstants.RIGHT);
 		redTotalScore.setForeground(greenFieldColor);
 		redRosterPanel.add(redTotalScore);
 
@@ -335,13 +343,13 @@ public class View extends JFrame{
 			greenData.addRow(row);
 		}
 
-		JTable greenTable = new JTable(greenData);
+		greenTable = new JTable(greenData);
 		greenTable.setBackground(Color.BLACK);
 		greenTable.setForeground(greenFieldColor);
 		greenRosterPanel.add(greenTable);
 
 		// Init and add green team total score label
-		JLabel greenTotalScore = new JLabel(String.valueOf(pa.getGreenTeamScore()), SwingConstants.RIGHT);
+		greenTotalScore = new JLabel(String.valueOf(pa.getGreenTeamScore()), SwingConstants.RIGHT);
 		greenTotalScore.setForeground(greenFieldColor);
 		greenRosterPanel.add(greenTotalScore);
 
@@ -360,6 +368,19 @@ public class View extends JFrame{
 		JLabel scorePanelTitle = new JLabel("CURRENT GAME ACTION", SwingConstants.CENTER);
 		scorePanelTitle.setForeground(Color.CYAN);
 		scorePanel.add(scorePanelTitle);
+
+		/*// Create JTextArea for action feed
+		actionFeed = new JTextArea(10, 30); // Set initial dimensions
+		actionFeed.setEditable(false); // Make it non-editable
+		actionFeed.setBackground(Color.DARK_GRAY);
+		actionFeed.setForeground(Color.CYAN);
+		actionFeed.setLineWrap(true);
+		actionFeed.setWrapStyleWord(true);
+
+		// Add JTextArea to JScrollPane for scrolling functionality
+		JScrollPane actionFeedScrollPane = new JScrollPane(actionFeed);
+		actionFeedScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scorePanel.add(actionFeedScrollPane); // Add scroll pane to the scorePanel*/
 
 		gameFrame.add(scorePanel, constraint);
 
@@ -380,6 +401,64 @@ public class View extends JFrame{
 		
 		gameFrame.setVisible(true); // Show the game window
 	}
+
+	// Method to update the action feed
+    public void updateActionFeed(String actionMessage) {
+        actionFeed.append(actionMessage + "\n");
+
+        // Optional: limit to the latest 10 entries
+        if (actionFeed.getLineCount() > 10) {
+            try {
+                int end = actionFeed.getLineEndOffset(0);
+                actionFeed.replaceRange("", 0, end);
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+	public void updateScores() {
+		// Get updated scores for each team
+		int redTeamScore = model.getTeamScore('r');
+		int greenTeamScore = model.getTeamScore('g');
+		
+		// Update the team score labels
+		redTotalScore.setText("Red Team: " + redTeamScore);
+		greenTotalScore.setText("Green Team: " + greenTeamScore);
+		
+		// Update individual scores in the red team table
+		DefaultTableModel redTableModel = (DefaultTableModel) redTable.getModel();
+		redTableModel.setRowCount(0); // Clear existing rows
+		for (Player p : model.getRedTeam().values()) {
+			Vector<String> row = new Vector<>();
+			row.add(p.getName());
+			row.add(String.valueOf(p.getScore()));
+			redTableModel.addRow(row);
+		}
+		
+		// Update individual scores in the green team table
+		DefaultTableModel greenTableModel = (DefaultTableModel) greenTable.getModel();
+		greenTableModel.setRowCount(0); // Clear existing rows
+		for (Player p : model.getGreenTeam().values()) {
+			Vector<String> row = new Vector<>();
+			row.add(p.getName());
+			row.add(String.valueOf(p.getScore()));
+			greenTableModel.addRow(row);
+		}
+	
+		//highlight the team with the highest score
+		if (redTeamScore > greenTeamScore) {
+			redTotalScore.setForeground(Color.YELLOW); // Highlight red team score
+			greenTotalScore.setForeground(Color.WHITE);
+		} else if (greenTeamScore > redTeamScore) {
+			greenTotalScore.setForeground(Color.YELLOW); // Highlight green team score
+			redTotalScore.setForeground(Color.WHITE);
+		} else {
+			redTotalScore.setForeground(Color.WHITE);
+			greenTotalScore.setForeground(Color.WHITE);
+		}
+	}
+	
 
 	public void paintComponent(Graphics g)
 	{
