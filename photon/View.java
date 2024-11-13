@@ -302,7 +302,7 @@ public class View extends JFrame{
 
 		// Init and add red team total score label
 		JLabel redTotalScore = new JLabel(String.valueOf(pa.getRedTeamScore()), SwingConstants.RIGHT);
-		redTotalScore.setForeground(greenFieldColor);
+		redTotalScore.setForeground(redFieldColor);
 		redRosterPanel.add(redTotalScore);
 
 		gameFrame.add(redRosterPanel, constraint);
