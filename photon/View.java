@@ -390,7 +390,12 @@ public class View extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 if (gameTime > 0) {
                     gameTime--;
-                    timerLabel.setText("TIME: " + gameTime/60 + ":" + gameTime%60);
+					if (gameTime%60 >= 10) {
+						timerLabel.setText("TIME: " + gameTime/60 + ":" + gameTime%60);
+					}
+                    else {
+						timerLabel.setText("TIME: " + gameTime/60 + ":0" + gameTime%60);
+					}
                 } else {
                     timer.stop();
                 }
