@@ -12,7 +12,7 @@ import javax.swing.JWindow;
 import javax.swing.SwingConstants;
 
 public class GameCountDown {
-    private static final int TOTAL_COUNTDOWN_SECONDS = 3;
+    private static final int TOTAL_COUNTDOWN_SECONDS = 30;
     private int remainingTime = TOTAL_COUNTDOWN_SECONDS;
     private Game gameInstance; // Reference to the game instance to start it after the countdown
     private JWindow countdownWindow; // JWindow for displaying the countdown

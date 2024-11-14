@@ -3,6 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 
 
 public class Controller implements ActionListener, KeyListener, CountDownListener {
@@ -39,18 +40,21 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 	public void keyPressed(KeyEvent e) {
 		System.out.println(e.getKeyCode());
 		switch (e.getKeyCode()) {
-			case KeyEvent.VK_INSERT:
+			case KeyEvent.VK_F3: 
 				try {
 					model.addPlayer();
 				} catch (Exception e1) {
 					System.out.println("SQL ERROR");
 				}
 				break;
-			case KeyEvent.VK_RIGHT:
+			case KeyEvent.VK_F2: 
 				model.shiftActiveFieldForward();
 				break;
-			case KeyEvent.VK_LEFT:
+			case KeyEvent.VK_F1: 
 				model.shiftActiveFieldBackward();
+				break;
+			case KeyEvent.VK_F12:
+				model.clearPlayers();
 				break;
 			case KeyEvent.VK_F5: // Check for F5 key
 				// Start the countdown and wait for the callback to trigger startGame
@@ -73,6 +77,14 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
     public void onCountdownFinished() {
         // This method will be called when the countdown is finished
         System.out.println("Countdown finished, starting the game...");
+
+		try {
+			// Create an instance of the UDP_Client and send code 202
+			UDP_Client udpClient = new UDP_Client();
+			udpClient.UDP_SendData("202"); // Send code 202 to the server
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         view.startGame(); // Now you can start the game after the countdown is complete
     }
     

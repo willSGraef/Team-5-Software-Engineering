@@ -140,6 +140,26 @@ public class Model {
 			redTeam.remove(eID);
 	}
 
+	public void clearPlayers()
+	{
+		if(redTeam != null)
+		{
+			redTeam.clear();
+		}
+		
+		if(greenTeam != null)
+		{
+			greenTeam.clear();
+		}
+		for (int i = 0; i < 45; i++)
+		{
+			redFields[i].setText("");
+			greenFields[i].setText("");
+		}
+		activeField = 0;
+		updateActiveField();
+	}
+
 	// add EntryField Method
 	public void addTextFieldRed(JTextField field, int row, int column)
 	{
