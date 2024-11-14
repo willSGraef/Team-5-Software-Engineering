@@ -17,14 +17,14 @@ public class Game{
         // Show splash screen before launching the game
         SplashScreen splash = new SplashScreen();
         splash.showSplash();
-
+    
         // Simulate loading process (e.g., 3 seconds)
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+    
         // Close the splash screen
         splash.closeSplash();
 
@@ -40,10 +40,12 @@ public class Game{
         // }
 
 
+    
         // Launch the game
         Game g = new Game();
         g.run();
     }
+    
     
     public void run() {
         while (true) {

@@ -3,8 +3,9 @@ import java.awt.Color;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
-
 import javax.swing.JTextField;
+
+
 
 
 
@@ -245,5 +246,18 @@ public class Model {
 
 	public HashMap<Integer, Player> getRedTeam() {
 		return redTeam;
+	}
+		// Method to award points to a team and add "B" symbol
+	public void awardPointsToTeam(char team, int points, String symbol) {
+		HashMap<Integer, Player> teamMap = (team == 'r') ? redTeam : greenTeam;
+	
+		for (Player player : teamMap.values()) {
+			player.updateScore(points); // Update player score
+	
+			// Add "B" to the beginning of the codename if not present
+			if (!player.getName().startsWith(symbol)) {
+				player.setName(symbol + player.getName());
+			}
+		}
 	}
 }
