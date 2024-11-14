@@ -13,7 +13,7 @@ public class UDP_Client {
 
     //Constructor that inits local host ip
     public UDP_Client() throws IOException {
-        this.clientSocket = new DatagramSocket(7500); 
+        this.clientSocket = new DatagramSocket(7501); 
         this.inetAddress = InetAddress.getByName("localhost");
     }
     
@@ -24,7 +24,7 @@ public class UDP_Client {
             data = messageToSend.getBytes();
             
             // Create the packet to send, with server address and port (7501 is the server's listening port)
-            DatagramPacket packetSend = new DatagramPacket(data, data.length, inetAddress, 7501);
+            DatagramPacket packetSend = new DatagramPacket(data, data.length, inetAddress, 7500);
             
             // Send the packet
             clientSocket.send(packetSend);
