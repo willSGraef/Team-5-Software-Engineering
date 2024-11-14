@@ -1,18 +1,12 @@
 package photon;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.chrono.JapaneseEra;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -22,14 +16,10 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import javax.swing.Timer;
-import java.util.TimerTask;
+
+import java.util.HashMap;
 import java.util.Vector;
 
 
