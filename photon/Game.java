@@ -39,8 +39,6 @@ public class Game{
         //     e.printStackTrace();
         // }
 
-
-    
         // Launch the game
         Game g = new Game();
         g.run();

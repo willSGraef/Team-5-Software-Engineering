@@ -34,6 +34,7 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 
         splash.closeSplash();
     }
+	
 
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -86,33 +87,5 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 		}
         view.startGame(); // Now you can start the game after the countdown is complete
     }
-
-	public void addActionToFeed(String actionMessage) {
-        view.updateActionFeed(actionMessage);
-    }
-
-	public void handlePlayerTag(int taggerId, int taggedId) {
-		// Retrieve the players from Model
-		Player tagger = model.getPlayerByEquipmentId(taggerId);
-		Player tagged = model.getPlayerByEquipmentId(taggedId);
-	
-		// Check if both players are valid
-		if (tagger != null && tagged != null) {
-			// Create the action message
-			String actionMessage = tagger.getName() + " tagged " + tagged.getName();
-			
-			// Update the action feed in the view
-			addActionToFeed(actionMessage);
-	
-			// Adjust scores based on whether it's a team or opponent tag
-			if (tagger.getTeam() == tagged.getTeam()) {
-				tagger.updateScore(-10); // Penalty for tagging own team
-			} else {
-				tagger.updateScore(10);  // Award points for tagging opponent
-			}
-	
-			// Refresh the score display in the view
-			view.updateScores();
-		}
-	}
+    
 }
