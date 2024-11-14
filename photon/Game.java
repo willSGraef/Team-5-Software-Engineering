@@ -17,29 +17,34 @@ public class Game{
         // Show splash screen before launching the game
         SplashScreen splash = new SplashScreen();
         splash.showSplash();
-
+    
         // Simulate loading process (e.g., 3 seconds)
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+    
         // Close the splash screen
         splash.closeSplash();
-
+    
         try {
-            // Initialize and start the UDP server in its own thread
-            UDP_Server udpServer = new UDP_Server();
-            new Thread(udpServer).start();
+            Model model = new Model(); // Create Model instance
+            UDP_Server server = new UDP_Server(model); // Create and initialize UDP_Server with model
+    
+            // Start the UDP_Server in its own thread
+            Thread serverThread = new Thread(server);
+            serverThread.start();
     
         } catch (IOException e) {
             e.printStackTrace();
         }
+    
         // Launch the game
         Game g = new Game();
         g.run();
     }
+    
     
     public void run() {
         while (true) {
