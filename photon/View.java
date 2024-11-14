@@ -8,6 +8,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.chrono.JapaneseEra;
 
 import javax.swing.BorderFactory;
@@ -23,6 +25,8 @@ import javax.swing.table.TableModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 
 
@@ -31,6 +35,7 @@ public class View extends JFrame{
 	Color greenFieldColor = new Color(127, 235, 110);
 
 	private Model model;
+	private Timer timer;
 
 	public View(Controller c, Model m)
 	{
@@ -246,11 +251,26 @@ public class View extends JFrame{
 		constraint.gridy = 2;
 		constraint.gridwidth = 3;
 		// Add base timer
-		JLabel timerLabel = new JLabel("TIME: 0:00", SwingConstants.CENTER);
+		JLabel timerLabel = new JLabel("TIME: 6:00", SwingConstants.CENTER);
 		timerLabel.setForeground(Color.CYAN);
 		timerPanel.add(timerLabel);
 
 		gameFrame.add(timerPanel, constraint);
+
+		timer = new Timer(1000, new ActionListener() {
+			// Init game time in seconds
+			int gameTime = 360;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (gameTime > 0) {
+                    gameTime--;
+                    timerLabel.setText("TIME: " + gameTime/60 + ":" + gameTime%60);
+                } else {
+                    timer.stop();
+                }
+            }
+        });
+        timer.start();
 		
 		gameFrame.setVisible(true); // Show the game window
 	}
