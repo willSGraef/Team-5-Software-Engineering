@@ -2,7 +2,7 @@ package photon;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress; 
+import java.net.InetAddress;
 
 
 
@@ -74,12 +74,34 @@ public class UDP_Server implements Runnable { //implement runnable
             model.awardPointsToTeam('g', 100, "B"); // Green team scores when red base is hit
         } else if (message.equals("43") && model != null) {
             model.awardPointsToTeam('r', 100, "B"); // Red team scores when green base is hit
+        } else {
+            // Player -> Player hit occurred
+            // Split player codes
+            String[] codes = message.split("[:]");
+            
+            // are player's on same team?
+            if (model.getPlayerTeamById((Integer.parseInt(codes[0]))) == model.getPlayerTeamById(Integer.parseInt(codes[1]))){
+                // Yes -> Shut down attacking player
+                UDP_SendData(codes[0]);
+                // No points awarded for team kills
+            } else {
+                // No -> Shut down attacked player
+                UDP_SendData(codes[1]);
+                // Award points
+                model.getPlayerByEquipmentId(Integer.parseInt(codes[0]));
+            }
         }
     }
 
-    // Method to close the server socket
-    public void close() {
+    // Send close code and close the server socket
+    public void close() throws IOException{
         if (serverSocket != null && !serverSocket.isClosed()) {
+            String closeMsg = "221";
+            data = closeMsg.getBytes();
+            DatagramPacket packetSend = new DatagramPacket(data, data.length, inetAddress, 7500);
+            for(int i = 0; i < 3; ++i) {
+                serverSocket.send(packetSend);
+            }
             serverSocket.close();
             System.out.println("UDP Server closed.");
         }

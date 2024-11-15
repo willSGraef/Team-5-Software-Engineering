@@ -124,11 +124,10 @@ public class Model {
 	//handle UDP transmission
 	public void sendEquipmentID(int equipmentID) {
 		try {
-			// Initialize the UDP client
-			//UDP_Server udpServer = new UDP_Server();
-			
 			// Send the equipment ID to the server
-			server.UDP_SendData(String.valueOf(equipmentID)); // Convert the equipment ID to a string
+			UDP_Client client = new UDP_Client();
+			client.UDP_SendData(String.valueOf(equipmentID));
+			// Client closes automatically
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -142,6 +141,15 @@ public class Model {
 			return greenTeam.get(equipmentID);
 		}
 		return null; // Return null if player not found
+	}
+
+	public char getPlayerTeamById(int equipmentID) {
+		if (redTeam.containsKey(equipmentID)) {
+			return 'r';
+		} else if (greenTeam.containsKey(equipmentID)) {
+			return 'g';
+		} 
+		return 'x';
 	}
 
 	public int getTeamScore(char team) {
