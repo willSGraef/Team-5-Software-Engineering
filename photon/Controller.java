@@ -63,6 +63,7 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
                 Game gameInstance = new Game(model);
                 GameCountDown countdown = new GameCountDown(gameInstance, this); // Pass 'this' as the listener
                 countdown.showCountdown();
+				model.playTrack();
 				break;
 			default:
 				break;
