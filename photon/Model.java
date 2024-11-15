@@ -239,4 +239,10 @@ public class Model {
 			}
 		}
 	}
+
+
+	public void playTrack(){
+		Thread audioThread = new Thread(new AudioPlayer());
+		audioThread.start();
+	}
 }
