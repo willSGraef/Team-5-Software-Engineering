@@ -19,6 +19,7 @@ public class Model {
 
 	private int activeField = 0; // 0-29, 
 
+	private UDP_Server server;
 	
 	private postgreSQL SQL = new postgreSQL();
 
@@ -124,10 +125,10 @@ public class Model {
 	public void sendEquipmentID(int equipmentID) {
 		try {
 			// Initialize the UDP client
-			UDP_Client udpClient = new UDP_Client();
+			//UDP_Server udpServer = new UDP_Server();
 			
 			// Send the equipment ID to the server
-			udpClient.UDP_SendData(String.valueOf(equipmentID)); // Convert the equipment ID to a string
+			server.UDP_SendData(String.valueOf(equipmentID)); // Convert the equipment ID to a string
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -153,6 +154,12 @@ public class Model {
 		return totalScore;
 	}
 	
+	public void setServerOBJ(UDP_Server s) {
+		this.server = s;
+	}
+	public UDP_Server getServerOBJ() {
+		return this.server;
+	}
 
 	// deletes a player from the in-game teams, but not the database.
 	public void deletePlayer(char team, int eID){

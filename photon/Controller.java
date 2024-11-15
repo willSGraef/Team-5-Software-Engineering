@@ -80,8 +80,8 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 
 		try {
 			// Create an instance of the UDP_Client and send code 202
-			UDP_Client udpClient = new UDP_Client();
-			udpClient.UDP_SendData("202"); // Send code 202 to the server
+			UDP_Server server = model.getServerOBJ();
+			server.UDP_SendData("202"); // Send code 202 to the server
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -11,12 +11,14 @@ public class UDP_Server implements Runnable { //implement runnable
     private byte[] data = new byte[1024];
     InetAddress ip;
     private DatagramSocket serverSocket;
+    private InetAddress inetAddress;
     private Model model; // Add Model field
 
 
     //Constructor that inits local host ip
     public UDP_Server() throws IOException {
         this.serverSocket = new DatagramSocket(7501); // Listening on port 7501
+        this.inetAddress = InetAddress.getByName("localhost");
         System.out.println("Server is running and ready to receive data...");
     }
 
@@ -37,6 +39,28 @@ public class UDP_Server implements Runnable { //implement runnable
         }
     }
 
+    //Send data method
+    public void UDP_SendData(String messageToSend) throws IOException {
+        try {
+            // Convert the message (equipment ID) to bytes
+            data = messageToSend.getBytes();
+            
+            // Create the packet to send, with server address and port (7501 is the server's listening port)
+            DatagramPacket packetSend = new DatagramPacket(data, data.length, inetAddress, 7500);
+            
+            // Send the packet
+            serverSocket.send(packetSend);
+            
+            System.out.println("Sent code: " + messageToSend);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            // Close the socket after sending the data
+            //serverSocket.close();
+        }
+    }
+
+
     // Method to receive data
     public void UDP_ReceiveData() throws IOException {
         DatagramPacket packetReceive = new DatagramPacket(data, data.length);
@@ -53,11 +77,11 @@ public class UDP_Server implements Runnable { //implement runnable
         }
     }
 
-        // Method to close the server socket
-        public void close() {
-            if (serverSocket != null && !serverSocket.isClosed()) {
-                serverSocket.close();
-                System.out.println("UDP Server closed.");
-            }
+    // Method to close the server socket
+    public void close() {
+        if (serverSocket != null && !serverSocket.isClosed()) {
+            serverSocket.close();
+            System.out.println("UDP Server closed.");
         }
+    }
 }
