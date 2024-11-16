@@ -115,4 +115,31 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 			view.updateScores();
 		}
 	}
+
+	public void handleBaseTag(int taggerId, int code) {
+		// Retrieve the player from the model
+		Player tagger = model.getPlayerByEquipmentId(taggerId);
+	
+		// Check if the player is valid
+		if (tagger != null) {
+			if (code == 53 && tagger.getTeam() == 'g') {
+				// Red base scored, and tagger is on the Green team
+				tagger.updateScore(100);
+				if (!tagger.getName().startsWith("B")) {
+					tagger.setName("B" + tagger.getName());
+				}
+				addActionToFeed(tagger.getName() + " scored on the Red base!");
+			} 
+			else if (code == 43 && tagger.getTeam() == 'r') {
+				// Green base scored, and tagger is on the Red team
+				tagger.updateScore(100);
+				if (!tagger.getName().startsWith("B")) {
+					tagger.setName("B" + tagger.getName());
+				}
+				addActionToFeed(tagger.getName() + " scored on the Green base!");
+			}
+			// Refresh the score display in the view
+			view.updateScores();
+		}
+	}	
 }

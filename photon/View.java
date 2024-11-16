@@ -369,19 +369,6 @@ public class View extends JFrame{
 		scorePanelTitle.setForeground(Color.CYAN);
 		scorePanel.add(scorePanelTitle);
 
-		/*// Create JTextArea for action feed
-		actionFeed = new JTextArea(10, 30); // Set initial dimensions
-		actionFeed.setEditable(false); // Make it non-editable
-		actionFeed.setBackground(Color.DARK_GRAY);
-		actionFeed.setForeground(Color.CYAN);
-		actionFeed.setLineWrap(true);
-		actionFeed.setWrapStyleWord(true);
-
-		// Add JTextArea to JScrollPane for scrolling functionality
-		JScrollPane actionFeedScrollPane = new JScrollPane(actionFeed);
-		actionFeedScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		scorePanel.add(actionFeedScrollPane); // Add scroll pane to the scorePanel*/
-
 		gameFrame.add(scorePanel, constraint);
 
 		// Init timerPanel
