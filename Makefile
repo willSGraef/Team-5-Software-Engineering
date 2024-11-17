@@ -9,8 +9,8 @@ main: ${SRC_FILES}
 	javac $^
 
 run:
-	java -classpath $(CURDIR)/lib/postgresql-42.7.4.jar:. photon/Game 
-	
+	java -classpath $(CURDIR)/lib/postgresql-42.7.4.jar:$(CURDIR)/lib/jl1.0.1.jar:. photon/Game 
+
 	
 	
 clean: 
