@@ -9,6 +9,7 @@ import java.net.InetAddress;
 public class UDP_Server implements Runnable { //implement runnable 
     //Class variables
     private byte[] data = new byte[1024];
+    private byte[] sendData = new byte[1024];
     InetAddress ip;
     private DatagramSocket serverSocket;
     private InetAddress inetAddress;
@@ -31,22 +32,24 @@ public class UDP_Server implements Runnable { //implement runnable
     // The run method will be executed when the thread starts
     @Override
     public void run() {
-        try {
-            UDP_ReceiveData(); // Call the receive data method in the thread
-        } catch (IOException e) {
-            System.out.println("Error receiving UDP data: " + e.getMessage());
-            e.printStackTrace();
-        }
+		while(true) {
+			try {
+				UDP_ReceiveData(); // Call the receive data method in the thread
+			} catch (IOException e) {
+				System.out.println("Error receiving UDP data: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
     }
 
     //Send data method
     public void UDP_SendData(String messageToSend) throws IOException {
         try {
             // Convert the message (equipment ID) to bytes
-            data = messageToSend.getBytes();
+            sendData = messageToSend.getBytes();
             
             // Create the packet to send, with server address and port (7501 is the server's listening port)
-            DatagramPacket packetSend = new DatagramPacket(data, data.length, inetAddress, 7500);
+            DatagramPacket packetSend = new DatagramPacket(sendData, sendData.length, inetAddress, 7500);
             
             // Send the packet
             serverSocket.send(packetSend);
@@ -76,7 +79,7 @@ public class UDP_Server implements Runnable { //implement runnable
             model.awardPointsToTeam('g', 100, "B"); // Green team scores when red base is hit
         } else if (message.equals("43") && model != null) {
             model.awardPointsToTeam('r', 100, "B"); // Red team scores when green base is hit
-        } else if (codes.length < 1) {
+        } else if (codes.length > 1) {
             // Player -> Player hit occurred
             // are player's on same team?
             if (model.getPlayerTeamById((Integer.parseInt(codes[0]))) == model.getPlayerTeamById(Integer.parseInt(codes[1]))){
