@@ -1,5 +1,5 @@
 SUBDIR=photon/
-JFILES=Controller.java Game.java Model.java postgreSQL.java Player.java SplashScreen.java View.java UDP_Client.java UDP_Server.java PlayerAction.java
+JFILES=Controller.java Game.java Model.java postgreSQL.java Player.java SplashScreen.java View.java UDP_Client.java UDP_Server.java PlayerAction.java AudioPlayer.java CountDownListener.java GameCountDown.java 
 
 SRC_FILES=$(addprefix ${SUBDIR}, ${JFILES})
 
