@@ -68,27 +68,29 @@ public class UDP_Server implements Runnable { //implement runnable
 
         String message = new String(packetReceive.getData(), 0, packetReceive.getLength()).trim();
         System.out.println("Received code: " + message);
+        // Split player codes
+        String[] codes = message.split("[:]");
 
         // Check for specific codes and use model if available
         if (message.equals("53") && model != null) {
             model.awardPointsToTeam('g', 100, "B"); // Green team scores when red base is hit
         } else if (message.equals("43") && model != null) {
             model.awardPointsToTeam('r', 100, "B"); // Red team scores when green base is hit
-        } else {
+        } else if (codes.length < 1) {
             // Player -> Player hit occurred
-            // Split player codes
-            String[] codes = message.split("[:]");
-            
             // are player's on same team?
             if (model.getPlayerTeamById((Integer.parseInt(codes[0]))) == model.getPlayerTeamById(Integer.parseInt(codes[1]))){
                 // Yes -> Shut down attacking player
                 UDP_SendData(codes[0]);
-                // No points awarded for team kills
+                // -1 points awarded for team kills
+                Player player = model.getPlayerByEquipmentId(Integer.parseInt(codes[0]));
+                player.updateScore(-10);
             } else {
                 // No -> Shut down attacked player
                 UDP_SendData(codes[1]);
                 // Award points
-                model.getPlayerByEquipmentId(Integer.parseInt(codes[0]));
+                Player player = model.getPlayerByEquipmentId(Integer.parseInt(codes[0]));
+                player.updateScore(10);
             }
         }
     }

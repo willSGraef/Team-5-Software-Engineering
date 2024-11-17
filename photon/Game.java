@@ -5,13 +5,15 @@ import java.io.IOException;
 
 
 public class Game extends Thread{
-    private Model model = new Model();
-    private Controller controller = new Controller(model);
-    private View view = new View(controller, model);
+    private Model model;
+    private Controller controller;
+    private View view;
     private UDP_Server server;
 
-    public Game() {
-
+    public Game(Model m) {
+        this.model = m;
+        this.controller = new Controller(this.model);
+        this.view = new View(this.controller, this.model);
     }
     public void setServerOBJ(UDP_Server s) {
         this.server = s;
@@ -33,11 +35,10 @@ public class Game extends Thread{
         // Close the splash screen
         splash.closeSplash();
 
-        // Create game early to pass thread
-        Game g = new Game();
+        Model model = new Model(); // Create Model instance
+        Game g = new Game(model); // Create game instance
 
         try {
-            Model model = new Model(); // Create Model instance
             UDP_Server server = new UDP_Server(model); // Create and initialize UDP_Server with model
     
             // Start the UDP_Server in its own thread
