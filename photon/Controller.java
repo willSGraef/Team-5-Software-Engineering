@@ -34,6 +34,7 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 
         splash.closeSplash();
     }
+	
 
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -59,9 +60,10 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 				// Start the countdown and wait for the callback to trigger startGame
 				//Clear previous view
 				this.view.dispose();
-                Game gameInstance = new Game();
+                Game gameInstance = new Game(model);
                 GameCountDown countdown = new GameCountDown(gameInstance, this); // Pass 'this' as the listener
                 countdown.showCountdown();
+				model.playTrack();
 				break;
 			default:
 				break;
@@ -79,8 +81,8 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 
 		try {
 			// Create an instance of the UDP_Client and send code 202
-			UDP_Client udpClient = new UDP_Client();
-			udpClient.UDP_SendData("202"); // Send code 202 to the server
+			UDP_Server server = model.getServerOBJ();
+			server.UDP_SendData("202"); // Send code 202 to the server
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

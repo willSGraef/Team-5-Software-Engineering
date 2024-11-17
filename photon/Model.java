@@ -3,8 +3,9 @@ import java.awt.Color;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
-
 import javax.swing.JTextField;
+
+
 
 
 
@@ -18,6 +19,7 @@ public class Model {
 
 	private int activeField = 0; // 0-29, 
 
+	private UDP_Server server;
 	
 	private postgreSQL SQL = new postgreSQL();
 
@@ -122,11 +124,10 @@ public class Model {
 	//handle UDP transmission
 	public void sendEquipmentID(int equipmentID) {
 		try {
-			// Initialize the UDP client
-			UDP_Client udpClient = new UDP_Client();
-			
 			// Send the equipment ID to the server
-			udpClient.UDP_SendData(String.valueOf(equipmentID)); // Convert the equipment ID to a string
+			UDP_Client client = new UDP_Client();
+			client.UDP_SendData(String.valueOf(equipmentID));
+			// Client closes automatically
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -142,6 +143,15 @@ public class Model {
 		return null; // Return null if player not found
 	}
 
+	public char getPlayerTeamById(int equipmentID) {
+		if (redTeam.containsKey(equipmentID)) {
+			return 'r';
+		} else if (greenTeam.containsKey(equipmentID)) {
+			return 'g';
+		} 
+		return 'x';
+	}
+
 	public int getTeamScore(char team) {
 		int totalScore = 0;
 		HashMap<Integer, Player> teamMap = (team == 'r') ? redTeam : greenTeam;
@@ -152,6 +162,12 @@ public class Model {
 		return totalScore;
 	}
 	
+	public void setServerOBJ(UDP_Server s) {
+		this.server = s;
+	}
+	public UDP_Server getServerOBJ() {
+		return this.server;
+	}
 
 	// deletes a player from the in-game teams, but not the database.
 	public void deletePlayer(char team, int eID){
@@ -245,5 +261,24 @@ public class Model {
 
 	public HashMap<Integer, Player> getRedTeam() {
 		return redTeam;
+	}
+		// Method to award points to a team and add "B" symbol
+	public void awardPointsToTeam(char team, int points, String symbol) {
+		HashMap<Integer, Player> teamMap = (team == 'r') ? redTeam : greenTeam;
+	
+		for (Player player : teamMap.values()) {
+			player.updateScore(points); // Update player score
+	
+			// Add "B" to the beginning of the codename if not present
+			if (!player.getName().startsWith(symbol)) {
+				player.setName(symbol + player.getName());
+			}
+		}
+	}
+
+
+	public void playTrack(){
+		Thread audioThread = new Thread(new AudioPlayer());
+		audioThread.start();
 	}
 }
