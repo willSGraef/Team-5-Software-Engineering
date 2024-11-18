@@ -281,7 +281,8 @@ public class Model {
 
 	public void playTrack(){
 		this.audio = new AudioPlayer();
-		audio.run();
+		Thread audioThread = new Thread(audio);
+		audioThread.start();
 	}
 
 	public void stopTrack() {

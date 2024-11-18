@@ -19,6 +19,7 @@ public class AudioPlayer implements Runnable{
 
     @Override
     public void run(){
+        playing = true; // Run has been called -> play the music
         while (playing) {
             Random rand = new Random();
             int randomTrackNumber = rand.nextInt(8) + 1; 
