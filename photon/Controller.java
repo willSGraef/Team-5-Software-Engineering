@@ -60,8 +60,7 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 				// Start the countdown and wait for the callback to trigger startGame
 				//Clear previous view
 				this.view.dispose();
-                Game gameInstance = new Game();
-                GameCountDown countdown = new GameCountDown(gameInstance, this); // Pass 'this' as the listener
+                GameCountDown countdown = new GameCountDown(this); // Pass 'this' as the listener
                 countdown.showCountdown();
 				model.playTrack();
 				break;

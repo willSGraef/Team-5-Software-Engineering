@@ -15,13 +15,11 @@ public class GameCountDown {
     private static final int TOTAL_COUNTDOWN_SECONDS = 30;
     private int remainingTime = TOTAL_COUNTDOWN_SECONDS;
     @SuppressWarnings("unused")
-    private Game gameInstance; // Reference to the game instance to start it after the countdown
     private JWindow countdownWindow; // JWindow for displaying the countdown
     private JLabel countdownLabel; // JLabel to display the countdown
     private CountDownListener listener;
 
-    public GameCountDown(Game game, CountDownListener listener) {
-        this.gameInstance = game;
+    public GameCountDown(CountDownListener listener) {
         this.listener = listener;
 
         // Create and configure the countdown window (similar to the splash screen)
