@@ -12,12 +12,15 @@ public class Game extends Thread{
 
     public Game(Model m) {
         this.model = m;
-        this.controller = new Controller(this.model);
+        this.controller = new Controller(model);
         this.view = new View(this.controller, this.model);
     }
     public void setServerOBJ(UDP_Server s) {
         this.server = s;
         model.setServerOBJ(this.server);
+    }
+    public Controller getController() {
+        return this.controller;
     }
 
     public static void main(String[] args) {
@@ -39,7 +42,7 @@ public class Game extends Thread{
         Game g = new Game(model); // Create game instance
 
         try {
-            UDP_Server server = new UDP_Server(model); // Create and initialize UDP_Server with model
+            UDP_Server server = new UDP_Server(g.getController()); // Create and initialize UDP_Server with model
     
             // Start the UDP_Server in its own thread
             Thread serverThread = new Thread(server);
