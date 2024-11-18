@@ -21,8 +21,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.Timer;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Vector;
+import java.io.IOException;
 
 
 public class View extends JFrame{
@@ -30,14 +33,18 @@ public class View extends JFrame{
 	Color greenFieldColor = new Color(127, 235, 110);
 
 	private Model model;
-	private JTextArea actionFeed;
+	private JTextArea actionFeed = new JTextArea(10, 1);
 	private Timer timer;
 
 	// Define score labels as instance variables
-	private JLabel redTotalScore;
-	private JLabel greenTotalScore;
-	private JTable redTable;
-	private JTable greenTable;
+	private JLabel redTotalScore = new JLabel();
+	private JLabel greenTotalScore = new JLabel();
+	private JTable redTable = new JTable();
+	private JTable greenTable = new JTable();
+
+	private JPanel redRosterPanel;
+	private JPanel greenRosterPanel;
+
 
 	public View(Controller c, Model m)
 	{
@@ -269,7 +276,7 @@ public class View extends JFrame{
 		constraint.fill = GridBagConstraints.BOTH;
 		
 		// Init team roster panels
-		JPanel redRosterPanel = new JPanel(new GridLayout(3,1));
+		redRosterPanel = new JPanel(new GridLayout(3,1));
 		// Theme components
 		redRosterPanel.setBackground(Color.BLACK);
 		redRosterPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
@@ -296,13 +303,13 @@ public class View extends JFrame{
 			redData.addRow(row);
 		}
 
-		JTable redTable = new JTable(redData);
+		redTable = new JTable(redData);
 		redTable.setBackground(Color.BLACK);
 		redTable.setForeground(redFieldColor);
 		redRosterPanel.add(redTable);
 
 		// Init and add red team total score label
-		JLabel redTotalScore = new JLabel(String.valueOf(pa.getRedTeamScore()), SwingConstants.RIGHT);
+		redTotalScore = new JLabel(String.valueOf(pa.getRedTeamScore()), SwingConstants.RIGHT);
 		redTotalScore.setForeground(redFieldColor);
 		redRosterPanel.add(redTotalScore);
 
@@ -310,7 +317,7 @@ public class View extends JFrame{
 
 		// GREEN ROSTER
 
-		JPanel greenRosterPanel = new JPanel(new GridLayout(3,1));
+		greenRosterPanel = new JPanel(new GridLayout(3,1));
 		// Theme components
 		greenRosterPanel.setBackground(Color.BLACK);
 		greenRosterPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
@@ -336,13 +343,13 @@ public class View extends JFrame{
 			greenData.addRow(row);
 		}
 
-		JTable greenTable = new JTable(greenData);
+		greenTable = new JTable(greenData);
 		greenTable.setBackground(Color.BLACK);
 		greenTable.setForeground(greenFieldColor);
 		greenRosterPanel.add(greenTable);
 
 		// Init and add green team total score label
-		JLabel greenTotalScore = new JLabel(String.valueOf(pa.getGreenTeamScore()), SwingConstants.RIGHT);
+		greenTotalScore = new JLabel(String.valueOf(pa.getGreenTeamScore()), SwingConstants.RIGHT);
 		greenTotalScore.setForeground(greenFieldColor);
 		greenRosterPanel.add(greenTotalScore);
 
@@ -350,7 +357,7 @@ public class View extends JFrame{
 
 
 		// Init scorePanel
-		JPanel scorePanel = new JPanel(new GridLayout(3, 1));
+		JPanel scorePanel = new JPanel(new GridLayout()); //3,1
 		scorePanel.setBackground(Color.DARK_GRAY);
 		scorePanel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 		constraint.weighty = 0.4;
@@ -362,6 +369,7 @@ public class View extends JFrame{
 		scorePanelTitle.setForeground(Color.CYAN);
 		scorePanel.add(scorePanelTitle);
 
+		scorePanel.add(actionFeed);
 		gameFrame.add(scorePanel, constraint);
 
 		// Init timerPanel
@@ -379,24 +387,30 @@ public class View extends JFrame{
 
 		gameFrame.add(timerPanel, constraint);
 		
+
 		timer = new Timer(1000, new ActionListener() {
 			// Init game time in seconds
 			int gameTime = 360;
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (gameTime > 0) {
-                    gameTime--;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (gameTime > 0) {
+					gameTime--;
 					if (gameTime%60 >= 10) {
 						timerLabel.setText("TIME: " + gameTime/60 + ":" + gameTime%60);
 					}
-                    else {
+					else {
 						timerLabel.setText("TIME: " + gameTime/60 + ":0" + gameTime%60);
 					}
-                } else {
-                    timer.stop();
-                }
-            }
-        });
+				} else {
+					try {
+						closeServer();
+					} catch (IOException e2) {
+						e2.printStackTrace();
+					}
+					timer.stop();
+				}
+			}
+		});
         timer.start();
 
 		gameFrame.setVisible(true); // Show the game window
@@ -417,6 +431,24 @@ public class View extends JFrame{
         }
     }
 
+	public Vector<Player> playersSortedByScore(HashMap<Integer, Player> team) {
+		Vector<Player> sortedPlayers = new Vector<>();
+		HashMap<Integer, Player> scorePlayerMap = new HashMap<>();
+		
+		for (Player p : team.values()) {
+			scorePlayerMap.put(p.getScore(), p);
+		}
+		
+		ArrayList<Integer> playerScores = new ArrayList<Integer>(scorePlayerMap.keySet());
+		Collections.sort(playerScores);
+
+		for (Integer i : playerScores) {
+			sortedPlayers.add(scorePlayerMap.get(i));
+		}
+		Collections.reverse(sortedPlayers);;
+		return sortedPlayers;
+	}
+
 	public void updateScores() {
 		// Get updated scores for each team
 		int redTeamScore = model.getTeamScore('r');
@@ -429,7 +461,8 @@ public class View extends JFrame{
 		// Update individual scores in the red team table
 		DefaultTableModel redTableModel = (DefaultTableModel) redTable.getModel();
 		redTableModel.setRowCount(0); // Clear existing rows
-		for (Player p : model.getRedTeam().values()) {
+		Vector<Player> redPlayers = playersSortedByScore(model.getRedTeam());
+		for (Player p : redPlayers) {
 			Vector<String> row = new Vector<>();
 			row.add(p.getName());
 			row.add(String.valueOf(p.getScore()));
@@ -439,13 +472,14 @@ public class View extends JFrame{
 		// Update individual scores in the green team table
 		DefaultTableModel greenTableModel = (DefaultTableModel) greenTable.getModel();
 		greenTableModel.setRowCount(0); // Clear existing rows
-		for (Player p : model.getGreenTeam().values()) {
+		Vector<Player> greenPlayers = playersSortedByScore(model.getGreenTeam());
+		for (Player p : greenPlayers) {
 			Vector<String> row = new Vector<>();
 			row.add(p.getName());
 			row.add(String.valueOf(p.getScore()));
 			greenTableModel.addRow(row);
 		}
-	
+		
 		//highlight the team with the highest score
 		if (redTeamScore > greenTeamScore) {
 			redTotalScore.setForeground(Color.YELLOW); // Highlight red team score
@@ -459,6 +493,10 @@ public class View extends JFrame{
 		}
 	}
 	
+	public void closeServer() throws IOException{
+		UDP_Server server = model.getServerOBJ();
+		server.close();
+	}
 
 	public void paintComponent(Graphics g)
 	{

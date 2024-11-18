@@ -18,7 +18,11 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 	
 	void setView(View v)
 	{
-		view = v;
+		this.view = v;
+	}
+
+	public Model getModel() {
+		return this.model;
 	}
 
 	public void showSplashScreen() {
@@ -82,7 +86,7 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 		try {
 			// Create an instance of the UDP_Client and send code 202
 			UDP_Server server = model.getServerOBJ();
-			server.UDP_SendData("202"); // Send code 202 to the server
+			server.UDP_SendData("202"); // Send code 202
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -91,6 +95,7 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 
 	public void addActionToFeed(String actionMessage) {
         view.updateActionFeed(actionMessage);
+		//view.repaint();
     }
 
 	public void handlePlayerTag(int taggerId, int taggedId) {
@@ -128,7 +133,7 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 				// Red base scored, and tagger is on the Green team
 				tagger.updateScore(100);
 				if (!tagger.getName().startsWith("B")) {
-					tagger.setName("B" + tagger.getName());
+					tagger.setName("[B] " + tagger.getName());
 				}
 				addActionToFeed(tagger.getName() + " scored on the Red base!");
 			} 
@@ -136,7 +141,7 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 				// Green base scored, and tagger is on the Red team
 				tagger.updateScore(100);
 				if (!tagger.getName().startsWith("B")) {
-					tagger.setName("B" + tagger.getName());
+					tagger.setName("[B] " + tagger.getName());
 				}
 				addActionToFeed(tagger.getName() + " scored on the Green base!");
 			}

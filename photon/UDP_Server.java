@@ -13,7 +13,9 @@ public class UDP_Server implements Runnable { //implement runnable
     InetAddress ip;
     private DatagramSocket serverSocket;
     private InetAddress inetAddress;
-    private Model model; // Add Model field
+    private Controller controller; // Add controller object
+    private Model model;
+    private boolean running = true;
 
 
     //Constructor that inits local host ip
@@ -24,15 +26,16 @@ public class UDP_Server implements Runnable { //implement runnable
     }
 
     // New constructor that accepts a Model instance
-    public UDP_Server(Model model) throws IOException {
+    public UDP_Server(Controller c) throws IOException {
         this(); // Call the original constructor
-        this.model = model; // Initialize the Model reference
+        this.controller = c; // Initialize the Model reference
+        this.model = controller.getModel();
     }
 
     // The run method will be executed when the thread starts
     @Override
     public void run() {
-		while(true) {
+		while(running) {
 			try {
 				UDP_ReceiveData(); // Call the receive data method in the thread
 			} catch (IOException e) {
@@ -75,25 +78,21 @@ public class UDP_Server implements Runnable { //implement runnable
         String[] codes = message.split("[:]");
 
         // Check for specific codes and use model if available
-        if (message.equals("53") && model != null) {
-            model.awardPointsToTeam('g', 100, "B"); // Green team scores when red base is hit
-        } else if (message.equals("43") && model != null) {
-            model.awardPointsToTeam('r', 100, "B"); // Red team scores when green base is hit
-        } else if (codes.length > 1) {
-            // Player -> Player hit occurred
-            // are player's on same team?
-            if (model.getPlayerTeamById((Integer.parseInt(codes[0]))) == model.getPlayerTeamById(Integer.parseInt(codes[1]))){
-                // Yes -> Shut down attacking player
-                UDP_SendData(codes[0]);
-                // -1 points awarded for team kills
-                Player player = model.getPlayerByEquipmentId(Integer.parseInt(codes[0]));
-                player.updateScore(-10);
-            } else {
-                // No -> Shut down attacked player
+
+        if (codes.length > 1) {
+            // Is it a base hit?
+            if ((codes[1].equals("53") || codes[1].equals("43")) && controller != null) {
+                controller.handleBaseTag(Integer.parseInt(codes[0]), Integer.parseInt(codes[1]));
                 UDP_SendData(codes[1]);
-                // Award points
-                Player player = model.getPlayerByEquipmentId(Integer.parseInt(codes[0]));
-                player.updateScore(10);
+            } else {
+                // Player -> player hit
+                controller.handlePlayerTag(Integer.parseInt(codes[0]), Integer.parseInt(codes[1]));
+                if(model.getPlayerTeamById(Integer.parseInt(codes[0])) == model.getPlayerTeamById(Integer.parseInt(codes[1]))) {
+                    // team-member hit, broadcast shooter
+                    UDP_SendData(codes[0]);
+                } else {
+                    UDP_SendData(codes[1]);
+                }
             }
         }
     }
@@ -109,6 +108,7 @@ public class UDP_Server implements Runnable { //implement runnable
             }
             serverSocket.close();
             System.out.println("UDP Server closed.");
+            running = false;
         }
     }
 }
