@@ -1,5 +1,6 @@
 package photon;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -9,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -35,6 +37,7 @@ public class View extends JFrame{
 	private Model model;
 	private JTextArea actionFeed = new JTextArea(10, 1);
 	private Timer timer;
+	private JFrame gf;
 
 	// Define score labels as instance variables
 	private JLabel redTotalScore = new JLabel();
@@ -50,6 +53,7 @@ public class View extends JFrame{
 	{
 		model = m;
 		c.setView(this);
+
 		this.addKeyListener(c);
 		this.setFocusTraversalKeysEnabled(false); 
 		this.setTitle("Photon");
@@ -252,7 +256,7 @@ public class View extends JFrame{
 						break;
 				}
 			}
-		}	
+		}
 	}
 
 	public void startGame() {
@@ -267,6 +271,7 @@ public class View extends JFrame{
 
 		// Create a new game window
 		JFrame gameFrame = new JFrame("Game");
+		this.gf = gameFrame;
 		// Clear gameFrame layout for absolute positioning
 		gameFrame.setLayout(new GridBagLayout());
 		gameFrame.setSize(frameWidth, frameHeight); // Set the size of the game window
@@ -373,7 +378,7 @@ public class View extends JFrame{
 		gameFrame.add(scorePanel, constraint);
 
 		// Init timerPanel
-		JPanel timerPanel = new JPanel(new GridLayout());
+		JPanel timerPanel = new JPanel(new GridLayout(1, 2));
 		timerPanel.setBackground(Color.BLACK);
 		timerPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 		constraint.weighty = 0.1;
@@ -381,13 +386,25 @@ public class View extends JFrame{
 		constraint.gridy = 2;
 		constraint.gridwidth = 3;
 		// Add base timer
-		JLabel timerLabel = new JLabel("TIME: 6:00", SwingConstants.CENTER);
+		JLabel timerLabel = new JLabel("TIME: 6:00", SwingConstants.LEFT);
 		timerLabel.setForeground(Color.CYAN);
 		timerPanel.add(timerLabel);
+		// Add button for new game
+		JButton newGameButton = new JButton("New game");
+		newGameButton.setVisible(false);
+		newGameButton.setForeground(Color.CYAN);
+		newGameButton.setBackground(Color.BLACK);
+		// Add action to button
+		newGameButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Ending game");
+				//Transmit codes here
+				restartView();
+			}
+		});
+		timerPanel.add(newGameButton);
 
 		gameFrame.add(timerPanel, constraint);
-		
-
 		timer = new Timer(1000, new ActionListener() {
 			// Init game time in seconds
 			int gameTime = 360;
@@ -401,16 +418,17 @@ public class View extends JFrame{
 					else {
 						timerLabel.setText("TIME: " + gameTime/60 + ":0" + gameTime%60);
 					}
-				} else {
+                } else {
+                    timer.stop();
 					try {
 						closeServer();
 					} catch (IOException e2) {
 						e2.printStackTrace();
 					}
-					timer.stop();
-				}
-			}
-		});
+					newGameButton.setVisible(true);
+                }
+            }
+        });
         timer.start();
 
 		gameFrame.setVisible(true); // Show the game window
@@ -496,6 +514,17 @@ public class View extends JFrame{
 	public void closeServer() throws IOException{
 		UDP_Server server = model.getServerOBJ();
 		server.close();
+	}
+
+	public void restartView() {
+		this.setVisible(true);
+		for (Component component : this.getComponents()) {
+			if (component instanceof JTextField) {
+				((JTextField)component).setText("");
+				System.out.println("Cleared text");
+			}
+		}
+		gf.setVisible(false);
 	}
 
 	public void paintComponent(Graphics g)

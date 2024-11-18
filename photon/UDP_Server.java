@@ -15,7 +15,6 @@ public class UDP_Server implements Runnable { //implement runnable
     private InetAddress inetAddress;
     private Controller controller; // Add controller object
     private Model model;
-    private boolean running = true;
 
 
     //Constructor that inits local host ip
@@ -35,7 +34,7 @@ public class UDP_Server implements Runnable { //implement runnable
     // The run method will be executed when the thread starts
     @Override
     public void run() {
-		while(running) {
+		while(true) {
 			try {
 				UDP_ReceiveData(); // Call the receive data method in the thread
 			} catch (IOException e) {
@@ -106,9 +105,6 @@ public class UDP_Server implements Runnable { //implement runnable
             for(int i = 0; i < 3; ++i) {
                 serverSocket.send(packetSend);
             }
-            serverSocket.close();
-            System.out.println("UDP Server closed.");
-            running = false;
         }
     }
 }
