@@ -1,6 +1,5 @@
 package photon;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -517,13 +516,8 @@ public class View extends JFrame{
 	}
 
 	public void restartView() {
+		model.clearPlayers();
 		this.setVisible(true);
-		for (Component component : this.getComponents()) {
-			if (component instanceof JTextField) {
-				((JTextField)component).setText("");
-				System.out.println("Cleared text");
-			}
-		}
 		gf.setVisible(false);
 	}
 
