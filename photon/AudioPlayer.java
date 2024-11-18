@@ -19,7 +19,7 @@ public class AudioPlayer implements Runnable{
     public void run(){
         Random rand = new Random();
         int randomTrackNumber = rand.nextInt(8) + 1; 
-        String filePath = "game_audio\\Track0" + randomTrackNumber + ".mp3";
+        String filePath = "game_audio//Track0" + randomTrackNumber + ".mp3";
         //Load class from jar file, then play
         try {
              // Path to the JAR file
