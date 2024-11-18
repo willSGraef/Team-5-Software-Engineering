@@ -1,5 +1,6 @@
 package photon;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -30,11 +31,13 @@ public class View extends JFrame{
 
 	private Model model;
 	private Timer timer;
+	private JFrame gf;
 
 	public View(Controller c, Model m)
 	{
 		model = m;
 		c.setView(this);
+
 		this.addKeyListener(c);
 		this.setFocusTraversalKeysEnabled(false); 
 		this.setTitle("Photon");
@@ -238,9 +241,6 @@ public class View extends JFrame{
 				}
 			}
 		}
-		
-    	
-    	
 	}
 
 	public void startGame() {
@@ -255,6 +255,7 @@ public class View extends JFrame{
 
 		// Create a new game window
 		JFrame gameFrame = new JFrame("Game");
+		this.gf = gameFrame;
 		// Clear gameFrame layout for absolute positioning
 		gameFrame.setLayout(new GridBagLayout());
 		gameFrame.setSize(frameWidth, frameHeight); // Set the size of the game window
@@ -389,7 +390,7 @@ public class View extends JFrame{
 		gameFrame.add(timerPanel, constraint);
 		timer = new Timer(1000, new ActionListener() {
 			// Init game time in seconds
-			int gameTime = 360;
+			int gameTime = 5;
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (gameTime > 0) {
@@ -412,9 +413,14 @@ public class View extends JFrame{
 	}
 
 	public void restartView() {
-		this.dispose();
-		Game g = new Game();
-		g.run();
+		this.setVisible(true);
+		for (Component component : this.getComponents()) {
+			if (component instanceof JTextField) {
+				((JTextField)component).setText("");
+				System.out.println("Cleared text");
+			}
+		}
+		gf.setVisible(false);
 	}
 
 	public void paintComponent(Graphics g)
