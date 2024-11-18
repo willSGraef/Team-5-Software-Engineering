@@ -390,7 +390,7 @@ public class View extends JFrame{
 		gameFrame.add(timerPanel, constraint);
 		timer = new Timer(1000, new ActionListener() {
 			// Init game time in seconds
-			int gameTime = 5;
+			int gameTime = 360;
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (gameTime > 0) {
