@@ -23,8 +23,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.Timer;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Vector;
 import java.io.IOException;
@@ -37,6 +35,7 @@ public class View extends JFrame{
 	private Model model;
 	private JTextArea actionFeed = new JTextArea(10, 1);
 	private Timer timer;
+	private Timer flashTimer;
 	private JFrame gf;
 
 	// Define score labels as instance variables
@@ -48,6 +47,8 @@ public class View extends JFrame{
 	private JPanel redRosterPanel;
 	private JPanel greenRosterPanel;
 
+	private int redTeamScore;
+	private int greenTeamScore;
 
 	public View(Controller c, Model m)
 	{
@@ -431,7 +432,60 @@ public class View extends JFrame{
         });
         timer.start();
 
+		flashTimer = new Timer(1000, new ActionListener() {
+			// Init game time in seconds
+			int gameTime = 360;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (gameTime > 0) {
+                    gameTime--;
+					if(redTeamScore > greenTeamScore) {
+						if(redTotalScore.getForeground() == Color.RED) {
+							redTotalScore.setForeground(Color.YELLOW);
+						} else {
+							redTotalScore.setForeground(Color.RED);
+						}
+						greenTotalScore.setForeground(Color.WHITE);
+					} else if(redTeamScore < greenTeamScore) {
+						if(greenTotalScore.getForeground() == Color.GREEN) {
+							greenTotalScore.setForeground(Color.YELLOW);
+						} else {
+							greenTotalScore.setForeground(Color.GREEN);
+						}
+						redTotalScore.setForeground(Color.WHITE);
+					} else {
+						redTotalScore.setForeground(Color.WHITE);
+						greenTotalScore.setForeground(Color.WHITE);
+					}
+                } else {
+                    flashTimer.stop();
+                }
+            }
+        });
+		flashTimer.start();
+
 		gameFrame.setVisible(true); // Show the game window
+	}
+
+	public Vector<Player> playersSortedByScore(HashMap<Integer, Player> team) {
+		Vector<Player> sortedPlayers = new Vector<>();
+		HashMap<Integer, Player> temp = (HashMap<Integer, Player>)team.clone();
+		int highestScore = -1;
+		Player highest = null;
+		int highID = -1;
+		for (int i = 0; i < team.size(); ++i) {
+			for (Integer ID : temp.keySet()) {
+				if(temp.get(ID).getScore() > highestScore) {
+					highestScore = temp.get(ID).getScore();
+					highest = temp.get(ID);
+					highID = ID;
+				}
+			}
+			sortedPlayers.add(highest);
+			temp.remove(highID, highest);
+			highestScore = -1;
+		}
+		return sortedPlayers;
 	}
 
 	// Method to update the action feed
@@ -449,28 +503,10 @@ public class View extends JFrame{
         }
     }
 
-	public Vector<Player> playersSortedByScore(HashMap<Integer, Player> team) {
-		Vector<Player> sortedPlayers = new Vector<>();
-		HashMap<Integer, Player> scorePlayerMap = new HashMap<>();
-		
-		for (Player p : team.values()) {
-			scorePlayerMap.put(p.getScore(), p);
-		}
-		
-		ArrayList<Integer> playerScores = new ArrayList<Integer>(scorePlayerMap.keySet());
-		Collections.sort(playerScores);
-
-		for (Integer i : playerScores) {
-			sortedPlayers.add(scorePlayerMap.get(i));
-		}
-		Collections.reverse(sortedPlayers);;
-		return sortedPlayers;
-	}
-
 	public void updateScores() {
 		// Get updated scores for each team
-		int redTeamScore = model.getTeamScore('r');
-		int greenTeamScore = model.getTeamScore('g');
+		redTeamScore = model.getTeamScore('r');
+		greenTeamScore = model.getTeamScore('g');
 		
 		// Update the team score labels
 		redTotalScore.setText("Red Team: " + redTeamScore);
@@ -498,17 +534,30 @@ public class View extends JFrame{
 			greenTableModel.addRow(row);
 		}
 		
-		//highlight the team with the highest score
-		if (redTeamScore > greenTeamScore) {
-			redTotalScore.setForeground(Color.YELLOW); // Highlight red team score
-			greenTotalScore.setForeground(Color.WHITE);
-		} else if (greenTeamScore > redTeamScore) {
-			greenTotalScore.setForeground(Color.YELLOW); // Highlight green team score
-			redTotalScore.setForeground(Color.WHITE);
-		} else {
-			redTotalScore.setForeground(Color.WHITE);
-			greenTotalScore.setForeground(Color.WHITE);
-		}
+		
+		// //highlight the team with the highest score
+		// if (redTeamScore > greenTeamScore) {
+		// 	redTotalScore.setForeground(Color.YELLOW); // Highlight red team score
+		// 	greenTotalScore.setForeground(Color.WHITE);
+		// } else if (greenTeamScore > redTeamScore) {
+		// 	greenTotalScore.setForeground(Color.YELLOW); // Highlight green team score
+		// 	redTotalScore.setForeground(Color.WHITE);
+		// } else {
+		// 	redTotalScore.setForeground(Color.WHITE);
+		// 	greenTotalScore.setForeground(Color.WHITE);
+		// }
+
+		// //highlight the team with the highest score
+		// if (redTeamScore > greenTeamScore) {
+		// 	redTotalScore.setForeground(Color.YELLOW); // Highlight red team score
+		// 	greenTotalScore.setForeground(Color.WHITE);
+		// } else if (greenTeamScore > redTeamScore) {
+		// 	greenTotalScore.setForeground(Color.YELLOW); // Highlight green team score
+		// 	redTotalScore.setForeground(Color.WHITE);
+		// } else {
+		// 	redTotalScore.setForeground(Color.WHITE);
+		// 	greenTotalScore.setForeground(Color.WHITE);
+		// }
 	}
 	
 	public void closeServer() throws IOException{
