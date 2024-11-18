@@ -2,6 +2,7 @@ package photon;
 
 import java.util.Random;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -33,7 +34,7 @@ public class AudioPlayer implements Runnable{
                 //Specify class name, constructor
                 String className = "javazoom.jl.player.Player";
                 Class<?> playerClass = loader.loadClass(className);
-                Constructor<?> constructor = playerClass.getConstructor();
+                Constructor<?> constructor = playerClass.getConstructor(InputStream.class);
                 
                 //Dynamically create player object and invoke method
                 FileInputStream audioInput = new FileInputStream(filePath);
