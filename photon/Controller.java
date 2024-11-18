@@ -18,7 +18,11 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 	
 	void setView(View v)
 	{
-		view = v;
+		this.view = v;
+	}
+
+	public Model getModel() {
+		return this.model;
 	}
 
 	public void showSplashScreen() {
@@ -80,12 +84,68 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 
 		try {
 			// Create an instance of the UDP_Client and send code 202
-			UDP_Client udpClient = new UDP_Client();
-			udpClient.UDP_SendData("202"); // Send code 202 to the server
+			UDP_Server server = model.getServerOBJ();
+			server.UDP_SendData("202"); // Send code 202
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
         view.startGame(); // Now you can start the game after the countdown is complete
     }
-    
+
+	public void addActionToFeed(String actionMessage) {
+        view.updateActionFeed(actionMessage);
+		//view.repaint();
+    }
+
+	public void handlePlayerTag(int taggerId, int taggedId) {
+		// Retrieve the players from Model
+		Player tagger = model.getPlayerByEquipmentId(taggerId);
+		Player tagged = model.getPlayerByEquipmentId(taggedId);
+	
+		// Check if both players are valid
+		if (tagger != null && tagged != null) {
+			// Create the action message
+			String actionMessage = tagger.getName() + " tagged " + tagged.getName();
+			
+			// Update the action feed in the view
+			addActionToFeed(actionMessage);
+	
+			// Adjust scores based on whether it's a team or opponent tag
+			if (tagger.getTeam() == tagged.getTeam()) {
+				tagger.updateScore(-10); // Penalty for tagging own team
+			} else {
+				tagger.updateScore(10);  // Award points for tagging opponent
+			}
+	
+			// Refresh the score display in the view
+			view.updateScores();
+		}
+	}
+
+	public void handleBaseTag(int taggerId, int code) {
+		// Retrieve the player from the model
+		Player tagger = model.getPlayerByEquipmentId(taggerId);
+	
+		// Check if the player is valid
+		if (tagger != null) {
+			if (code == 53 && tagger.getTeam() == 'g') {
+				// Red base scored, and tagger is on the Green team
+				tagger.updateScore(100);
+				if (!tagger.getName().startsWith("B")) {
+					tagger.setName("[B] " + tagger.getName());
+				}
+				addActionToFeed(tagger.getName() + " scored on the Red base!");
+			} 
+			else if (code == 43 && tagger.getTeam() == 'r') {
+				// Green base scored, and tagger is on the Red team
+				tagger.updateScore(100);
+				if (!tagger.getName().startsWith("B")) {
+					tagger.setName("[B] " + tagger.getName());
+				}
+				addActionToFeed(tagger.getName() + " scored on the Green base!");
+			}
+			// Refresh the score display in the view
+			view.updateScores();
+		}
+	}	
 }
