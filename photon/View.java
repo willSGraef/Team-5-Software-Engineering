@@ -408,24 +408,24 @@ public class View extends JFrame{
 		timer = new Timer(1000, new ActionListener() {
 			// Init game time in seconds
 			int gameTime = 360;
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (gameTime > 0) {
-					gameTime--;
-					if (gameTime%60 >= 10) {
-						timerLabel.setText("TIME: " + gameTime/60 + ":" + gameTime%60);
-					}
-					else {
-						timerLabel.setText("TIME: " + gameTime/60 + ":0" + gameTime%60);
-					}
-                } else {
-                    timer.stop();
-					try {
-						closeServer();
-					} catch (IOException e2) {
-						e2.printStackTrace();
-					}
-					newGameButton.setVisible(true);
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (gameTime > 0) {
+                    gameTime--;
+                    if (gameTime%60 >= 10) {
+                      timerLabel.setText("TIME: " + gameTime/60 + ":" + gameTime%60);
+                    }
+                    else {
+                      timerLabel.setText("TIME: " + gameTime/60 + ":0" + gameTime%60);
+                    }
+                          } else {
+                              timer.stop();
+                    try {
+                      closeServer();
+                    } catch (IOException e2) {
+                      e2.printStackTrace();
+                    }
+                    newGameButton.setVisible(true);
                 }
             }
         });
