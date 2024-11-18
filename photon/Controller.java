@@ -5,6 +5,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 
+import javax.swing.JLabel;
+import javax.swing.JTable;
+
 
 public class Controller implements ActionListener, KeyListener, CountDownListener {
 
@@ -93,32 +96,33 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
         view.updateActionFeed(actionMessage);
     }
 
-	public void handlePlayerTag(int taggerId, int taggedId) {
-		// Retrieve the players from Model
+	public void handlePlayerTag(int taggerId, int taggedId, JTable redTable, JTable greenTable, JLabel redTotalScore, JLabel greenTotalScore) {
+		// Retrieve the players from the model
 		Player tagger = model.getPlayerByEquipmentId(taggerId);
 		Player tagged = model.getPlayerByEquipmentId(taggedId);
-	
+
 		// Check if both players are valid
 		if (tagger != null && tagged != null) {
 			// Create the action message
 			String actionMessage = tagger.getName() + " tagged " + tagged.getName();
-			
+
 			// Update the action feed in the view
 			addActionToFeed(actionMessage);
-	
+
 			// Adjust scores based on whether it's a team or opponent tag
 			if (tagger.getTeam() == tagged.getTeam()) {
 				tagger.updateScore(-10); // Penalty for tagging own team
 			} else {
 				tagger.updateScore(10);  // Award points for tagging opponent
 			}
-	
-			// Refresh the score display in the view
-			view.updateScores();
+
+			// Update the scores in the view
+			view.updateScores(redTable, greenTable, redTotalScore, greenTotalScore);
 		}
 	}
 
-	public void handleBaseTag(int taggerId, int code) {
+
+	public void handleBaseTag(int taggerId, int code, JTable redTable, JTable greenTable, JLabel redTotalScore, JLabel greenTotalScore) {
 		// Retrieve the player from the model
 		Player tagger = model.getPlayerByEquipmentId(taggerId);
 	
@@ -141,7 +145,7 @@ public class Controller implements ActionListener, KeyListener, CountDownListene
 				addActionToFeed(tagger.getName() + " scored on the Green base!");
 			}
 			// Refresh the score display in the view
-			view.updateScores();
+			view.updateScores(redTable, greenTable, redTotalScore, greenTotalScore);
 		}
 	}	
 }

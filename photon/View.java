@@ -399,6 +399,15 @@ public class View extends JFrame{
         });
         timer.start();
 
+		// Score Update Timer
+		Timer scoreUpdateTimer = new Timer(1000, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				updateScores(redTable, greenTable, redTotalScore, greenTotalScore);
+			}
+		});
+		scoreUpdateTimer.start();
+
 		gameFrame.setVisible(true); // Show the game window
 	}
 
@@ -417,7 +426,7 @@ public class View extends JFrame{
         }
     }
 
-	public void updateScores() {
+	public void updateScores(JTable redTable, JTable greenTable, JLabel redTotalScore, JLabel greenTotalScore) {
 		// Get updated scores for each team
 		int redTeamScore = model.getTeamScore('r');
 		int greenTeamScore = model.getTeamScore('g');
