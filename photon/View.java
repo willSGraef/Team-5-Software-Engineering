@@ -1,33 +1,26 @@
 package photon;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.LayoutManager;
-import java.time.chrono.JapaneseEra;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import javax.swing.text.BadLocationException;
+import javax.swing.Timer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -38,6 +31,7 @@ public class View extends JFrame{
 
 	private Model model;
 	private JTextArea actionFeed;
+	private Timer timer;
 
 	// Define score labels as instance variables
 	private JLabel redTotalScore;
@@ -251,8 +245,7 @@ public class View extends JFrame{
 						break;
 				}
 			}
-		}
-    	
+		}	
 	}
 
 	public void startGame() {
@@ -303,14 +296,14 @@ public class View extends JFrame{
 			redData.addRow(row);
 		}
 
-		redTable = new JTable(redData);
+		JTable redTable = new JTable(redData);
 		redTable.setBackground(Color.BLACK);
 		redTable.setForeground(redFieldColor);
 		redRosterPanel.add(redTable);
 
 		// Init and add red team total score label
-		redTotalScore = new JLabel(String.valueOf(pa.getRedTeamScore()), SwingConstants.RIGHT);
-		redTotalScore.setForeground(greenFieldColor);
+		JLabel redTotalScore = new JLabel(String.valueOf(pa.getRedTeamScore()), SwingConstants.RIGHT);
+		redTotalScore.setForeground(redFieldColor);
 		redRosterPanel.add(redTotalScore);
 
 		gameFrame.add(redRosterPanel, constraint);
@@ -343,13 +336,13 @@ public class View extends JFrame{
 			greenData.addRow(row);
 		}
 
-		greenTable = new JTable(greenData);
+		JTable greenTable = new JTable(greenData);
 		greenTable.setBackground(Color.BLACK);
 		greenTable.setForeground(greenFieldColor);
 		greenRosterPanel.add(greenTable);
 
 		// Init and add green team total score label
-		greenTotalScore = new JLabel(String.valueOf(pa.getGreenTeamScore()), SwingConstants.RIGHT);
+		JLabel greenTotalScore = new JLabel(String.valueOf(pa.getGreenTeamScore()), SwingConstants.RIGHT);
 		greenTotalScore.setForeground(greenFieldColor);
 		greenRosterPanel.add(greenTotalScore);
 
@@ -380,12 +373,32 @@ public class View extends JFrame{
 		constraint.gridy = 2;
 		constraint.gridwidth = 3;
 		// Add base timer
-		JLabel timerLabel = new JLabel("TIME: 0:00", SwingConstants.CENTER);
+		JLabel timerLabel = new JLabel("TIME: 6:00", SwingConstants.CENTER);
 		timerLabel.setForeground(Color.CYAN);
 		timerPanel.add(timerLabel);
 
 		gameFrame.add(timerPanel, constraint);
 		
+		timer = new Timer(1000, new ActionListener() {
+			// Init game time in seconds
+			int gameTime = 360;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (gameTime > 0) {
+                    gameTime--;
+					if (gameTime%60 >= 10) {
+						timerLabel.setText("TIME: " + gameTime/60 + ":" + gameTime%60);
+					}
+                    else {
+						timerLabel.setText("TIME: " + gameTime/60 + ":0" + gameTime%60);
+					}
+                } else {
+                    timer.stop();
+                }
+            }
+        });
+        timer.start();
+
 		gameFrame.setVisible(true); // Show the game window
 	}
 
