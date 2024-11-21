@@ -418,8 +418,9 @@ public class View extends JFrame{
                     else {
                       timerLabel.setText("TIME: " + gameTime/60 + ":0" + gameTime%60);
                     }
-                          } else {
-                              timer.stop();
+				} else {
+					timer.stop();
+					model.stopTrack();
                     try {
                       closeServer();
                     } catch (IOException e2) {
