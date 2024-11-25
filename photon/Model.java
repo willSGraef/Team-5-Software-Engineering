@@ -281,11 +281,10 @@ public class Model {
 
 	public void playTrack(){
 		this.audio = new AudioPlayer();
-		Thread audioThread = new Thread(audio);
-		audioThread.start();
+		this.audio.startPlaying();
 	}
 
 	public void stopTrack() {
-		this.audio.stop();
+		this.audio.stopPlaying();
 	}
 }
