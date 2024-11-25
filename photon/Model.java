@@ -22,6 +22,7 @@ public class Model {
 	private UDP_Server server;
 
 	private AudioPlayer audio;
+	private Thread audioThread;
 	
 	private postgreSQL SQL = new postgreSQL();
 
@@ -281,7 +282,8 @@ public class Model {
 
 	public void playTrack(){
 		this.audio = new AudioPlayer();
-		audio.run();
+		this.audioThread = new Thread(this.audio);
+		audioThread.start();
 	}
 
 	public void stopTrack() {
